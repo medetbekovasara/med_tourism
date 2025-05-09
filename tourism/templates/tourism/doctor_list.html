@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Список Врачей | MedTour{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <h2 class="text-center section-title mb-4">Наши Врачи</h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
+    {% for doctor in doctors %}
+    <div class="col">
+      <div class="card card-doctor shadow-sm h-100 d-flex flex-row align-items-center p-4">
+        <img src="{{ doctor.photo.url }}" class="img-fluid rounded me-4" alt="{{ doctor.name }}" style="width: 150px; height: 150px; object-fit: cover;">
+        <div class="flex-grow-1">
+          <h4 class="card-title mb-2">{{ doctor.name }}</h4>
+          <p class="mb-2"><strong>Специализация:</strong> {{ doctor.specialty }}</p>
+          <p class="mb-2"><strong>Опыт работы:</strong> {{ doctor.experience }} лет</p>
+          <p class="text-warning mb-3">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </p>
+          <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>MedTour</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .flags {
+      margin-bottom: 20px;
+    }
+
+    .flag-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      margin: 0 8px;
+    }
+
+    .flag-btn img {
+      width: 40px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #google_translate_element {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flags">
+    <button class="flag-btn" onclick="changeLanguage('ru')">
+      <img src="https://flagcdn.com/w40/ru.png" alt="Русский">
+    </button>
+    <button class="flag-btn" onclick="changeLanguage('en')">
+      <img src="https://flagcdn.com/w40/gb.png" alt="English">
+    </button>
+    <button class="flag-btn" onclick="changeLanguage('zh-CN')">
+      <img src="https://flagcdn.com/w40/cn.png" alt="中文">
+    </button>
+  </div>
+
+  <h1>Добро пожаловать на MedTour!</h1>
+  <p>Мы поможем вам найти клинику, врача и отель в Кыргызстане.</p>
+
+  <div id="google_translate_element"></div>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ru',
+        includedLanguages: 'en,ru,zh-CN',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+
+    function changeLanguage(lang) {
+      const interval = setInterval(function () {
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = lang;
+          select.dispatchEvent(new Event('change'));
+          clearInterval(interval);
+        }
+      }, 100);
+    }
+  </script>
+
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>
+

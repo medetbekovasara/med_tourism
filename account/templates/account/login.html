@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в аккаунт{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center">Вход</h2>
+            <p class="text-center text-muted">Добро пожаловать! Войдите в свой аккаунт.</p>
+
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <p>Неверное имя пользователя или пароль. Попробуйте снова.</p>
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label"><i class="fas fa-user"></i> Имя пользователя</label>
+                    <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><i class="fas fa-lock"></i> Пароль</label>
+                    <input type="password" name="password" class="form-control" placeholder="Введите пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Войти</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'password_reset' %}" class="text-muted">Забыли пароль?</a>
+            </div>
+            <p class="text-center mt-2">
+                Нет аккаунта? <a href="{% url 'register' %}" class="text-decoration-none">Зарегистрируйтесь</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

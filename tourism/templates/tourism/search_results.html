@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Результаты поиска{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Результаты поиска для "{{ query }}"</h2>
+
+    {% if doctors %}
+        <h4>Врачи:</h4>
+        <div class="row">
+            {% for doctor in doctors %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ doctor.photo.url }}" class="card-img-top" alt="{{ doctor.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ doctor.name }}</h5>
+                        <p class="card-text">Специальность: {{ doctor.specialty }}</p>
+                        <p class="card-text">Опыт: {{ doctor.experience }} лет</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if clinics %}
+        <h4 class="mt-5">Клиники:</h4>
+        <div class="row">
+            {% for clinic in clinics %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ clinic.name }}</h5>
+                        <p class="card-text">{{ clinic.description|truncatewords:15 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if not doctors and not clinics %}
+        <p class="text-center text-muted">По вашему запросу ничего не найдено.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

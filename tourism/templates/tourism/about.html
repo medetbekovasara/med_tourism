@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}О проекте — MedTour Кыргызстан{% endblock %}
+
+{% block content %}
+<section style="position: relative; height: 70vh; background: url('https://cdn.tripster.ru/thumbs2/46a3ce6e-bc28-11ed-ab44-ee2fa366151b.1220x600.jpeg') center/cover no-repeat;">
+  <!-- Лёгкий градиент для контраста -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+              background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));">
+  </div>
+
+  <!-- Контент поверх -->
+  <div class="container h-100 d-flex justify-content-center align-items-center text-center position-relative" style="z-index: 2;">
+    <div class="text-white px-3">
+      <h1 class="display-4 fw-bold">Кыргызстан — потенциал для медицинского туризма</h1>
+      <p class="lead mt-3">Страна, где качество медицины сочетается с доступностью и природной красотой</p>
+    </div>
+  </div>
+</section>
+
+<!-- Миссия -->
+<section class="py-5" style="background: linear-gradient(135deg, #004c97, #007bff); border-radius: 30px; margin: 60px auto; max-width: 90%; color: white;" >
+  <div class="container px-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h2 class="fw-bold mb-4 text-center">Миссия медицинского туризма в Кыргызстане</h2>
+        <p class="fs-5 text-center">
+          Наша цель — создать экосистему, где современные технологии, клиническая экспертиза и внимательное отношение
+          к каждому пациенту работают вместе на благо здоровья.
+        </p>
+        <p class="fs-5 text-center">
+          Мы стремимся обеспечить высокий уровень медицинской помощи с максимальным комфортом для иностранных пациентов —
+          от первичной консультации до успешного восстановления.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-5" style="background: linear-gradient(135deg, #004c97, #007bff); border-radius: 30px; padding: 60px 20px; margin: 60px auto; max-width: 95%;">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <!-- Картинки -->
+      <div class="col-md-6">
+        <div class="row g-3">
+          <div class="col-6">
+            <img src="https://proforientator.ru/upload/webp/100/upload/img/publications/stati/vrach460.webp" class="img-fluid rounded shadow-sm object-fit-cover" style="height: 200px; width: 100%;" alt="...">
+          </div>
+          <div class="col-6">
+            <img src="https://ss.metronews.ru/userfiles/materials/195/1951172/858x540.jpg" class="img-fluid rounded shadow-sm object-fit-cover" style="height: 200px; width: 100%;" alt="...">
+          </div>
+          <div class="col-6">
+            <img src="https://img.freepik.com/free-photo/doctor-nurse-with-patient_23-2148973467.jpg" class="img-fluid rounded shadow-sm object-fit-cover" style="height: 200px; width: 100%;" alt="...">
+          </div>
+          <div class="col-6">
+            <img src="https://dental-pro.online/upload/medialibrary/0ae/0aeed60386f8e24c6f429967603b41a6.webp" class="img-fluid rounded shadow-sm object-fit-cover" style="height: 200px; width: 100%;" alt="...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Текст -->
+      <div class="col-md-6 ps-md-5 text-white">
+        <h3 class="fw-bold mb-3">Почему Кыргызстан?</h3>
+        <p class="mb-4">Кыргызстан активно развивает медицинский туризм. В стране работают современные клиники, врачи с международным опытом, а стоимость лечения — одна из самых доступных в регионе.</p>
+        <ul class="list-unstyled fs-5">
+          <li class="mb-2">✔ Более 200 квалифицированных специалистов</li>
+          <li class="mb-2">✔ Современные частные и государственные клиники</li>
+          <li class="mb-2">✔ Природные курорты и реабилитационные центры</li>
+          <li class="mb-2">✔ Широкий спектр услуг: диагностика, лечение, пластика</li>
+        </ul>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+
+<!-- О платформе -->
+<!-- О проекте MedTour -->
+<section class="py-5" style="background: linear-gradient(135deg, #f8fbff, #e6f0ff); border-radius: 30px;">
+  <div class="container text-center">
+    <div class="mb-4">
+      <h2 class="fw-bold display-5">О проекте <span style="color: #007bff;">MedTour</span></h2>
+      <p class="lead mt-3 text-muted">Цифровой мост между пациентами и лучшими клиниками Кыргызстана</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-4 mb-4">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/3208/3208753.png" alt="booking" width="60" class="mb-3">
+          <h5 class="fw-semibold">Удобное бронирование</h5>
+          <p class="text-muted">Выбирайте клинику, врача или отель и бронируйте в несколько кликов, без посредников.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/560/560277.png" alt="support" width="60" class="mb-3">
+          <h5 class="fw-semibold">Поддержка 24/7</h5>
+          <p class="text-muted">Мы сопровождаем пациентов на всех этапах: от первого запроса до возвращения домой.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="transparency" width="60" class="mb-3">
+          <h5 class="fw-semibold">Прозрачная информация</h5>
+          <p class="text-muted">Актуальные цены, описания услуг и рейтинг учреждений — всё на одной платформе.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Бронирование Клиники{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4 mb-3 text-center">Бронирование Клиники</h2>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card shadow-lg p-4">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Выберите клинику:</label>
+                {{ form.clinic }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Выберите врача:</label>
+                {{ form.doctor }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Выберите отделение:</label>
+                {{ form.department }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Дата начала:</label>
+                    {{ form.start_date }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Дата окончания:</label>
+                    {{ form.end_date }}
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Забронировать</button>
+                <a href="{% url 'clinic_list' %}" class="btn btn-secondary">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

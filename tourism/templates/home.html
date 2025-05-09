@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - MedTour{% endblock %}
+
+{% block content %}
+<!-- Hero-блок -->
+<section class="hero-section d-flex align-items-center text-white text-center" style="background: linear-gradient(to right, #007bff, #00c6ff); min-height: 60vh;">
+    <div class="container">
+        <h1 class="mb-3">Лечение за границей</h1>
+        <p class="lead mb-4">Найдите лучшую клинику, врача или отель для медицинского туризма</p>
+        <form method="GET" action="{% url 'search_results' %}" class="d-flex justify-content-center mt-4">
+    <input type="text" name="q" class="form-control w-50 me-2" placeholder="Поиск клиники, врача или услуги">
+    <button type="submit" class="btn btn-light px-4">Найти</button>
+</form>
+    </div>
+</section>
+
+<!-- Популярные клиники -->
+<section class="container my-5">
+  <h2 class="section-title text-center mb-4">Популярные клиники</h2>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for clinic in clinics %}
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+          {% if clinic.photo %}
+            <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
+          {% else %}
+            <img src="https://via.placeholder.com/400x250?text={{ clinic.name|urlencode }}" class="card-img-top" alt="{{ clinic.name }}">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ clinic.name }}</h5>
+            <p class="card-text text-muted">{{ clinic.city }}, {{ clinic.country }}</p>
+            <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary btn-sm">Подробнее</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Популярные направления лечения в Кыргызстане -->
+<section class="container my-5">
+  <h2 class="section-title text-center">Популярные направления лечения в Кыргызстане</h2>
+  <div class="row text-center g-4 mt-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <img src="https://images.ctfassets.net/sn2lbnot42sd/1Q19q9G7S51Mi9jFVrwiH6/d849d0e26072c42658fd4510f76c0424/35_0-ru-ru" class="card-img-top" alt="Стоматология">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Стоматология</h5>
+          <p class="card-text">Эстетическая и терапевтическая стоматология по доступной цене и с современным оборудованием.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <img src="https://czar.kg/wp-content/uploads/2019/12/cardiology.jpg" class="card-img-top" alt="Кардиология">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Кардиология</h5>
+          <p class="card-text">Диагностика и лечение сердечно-сосудистых заболеваний с участием высококвалифицированных специалистов.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm h-100">
+        <img src="https://greenvillagemedical.com/wp-content/uploads/2024/03/face-surgery.webp" class="card-img-top" alt="Пластическая хирургия">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Пластическая хирургия</h5>
+          <p class="card-text">Операции различной сложности, включая ринопластику, блефаропластику и контурную пластику лица.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Как это работает -->
+<section class="py-5" style="background: linear-gradient(135deg, #e6f0fb, #ffffff);">
+  <div class="container">
+    <h2 class="section-title text-center fw-bold text-primary mb-5" style="font-size: 2rem;">Как работает MedTour</h2>
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/54/54481.png" alt="Поиск" width="60">
+          <h5 class="fw-semibold mt-3">1. Найдите клинику</h5>
+          <p class="text-muted small">Выберите медицинское учреждение, специализацию и подходящего врача.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/3771/3771344.png" alt="Консультация" width="60">
+          <h5 class="fw-semibold mt-3">2. Получите консультацию</h5>
+          <p class="text-muted small">Запросите онлайн-консультацию или уточните детали через нашего менеджера.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/8832/8832108.png" alt="Бронирование" width="60">
+          <h5 class="fw-semibold mt-3">3. Забронируйте услугу</h5>
+          <p class="text-muted small">Подтвердите лечение, забронируйте клинику и получите помощь с организацией.</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm h-100">
+          <img src="https://cdn-icons-png.flaticon.com/512/2774/2774060.png" alt="Лечение" width="60">
+          <h5 class="fw-semibold mt-3">4. Пройдите лечение</h5>
+          <p class="text-muted small">Приезжайте в Кыргызстан, пройдите курс лечения и восстановление в комфорте.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

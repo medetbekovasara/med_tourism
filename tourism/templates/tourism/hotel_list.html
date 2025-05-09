@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Список Отелей{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center mb-4">Список Отелей</h2>
+  <div class="row">
+    {% for hotel in hotels %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow border-0 h-100">
+        {% if hotel.photo %}
+        <img src="{{ hotel.photo.url }}" class="card-img-top" alt="{{ hotel.name }}">
+        {% else %}
+        <img src="https://via.placeholder.com/400x250?text=Нет+фото" class="card-img-top" alt="Нет фото">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">{{ hotel.name }}</h5>
+          <p class="text-muted">{{ hotel.city }}, {{ hotel.country }}</p>
+          <p class="card-text">{{ hotel.address }}</p>
+          <a href="{% url 'hotel_detail' hotel.id %}" class="btn btn-outline-primary">Подробнее</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Клиники | MedTour{% endblock %}
+
+{% block content %}
+<section class="container my-5">
+  <h2 class="section-title text-center mb-4">Лучшие клиники для вашего здоровья</h2>
+  <div class="row">
+    {% for clinic in clinics %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm transition card-clinic h-100">
+        {% if clinic.photo %}
+        <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
+        {% else %}
+        <img src="https://via.placeholder.com/400x220.png?text=No+Image" class="card-img-top" alt="Клиника">
+        {% endif %}
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ clinic.name }}</h5>
+          <p class="card-text text-muted">{{ clinic.address }}</p>
+          <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-outline-primary">Подробнее</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center">Пока нет доступных клиник.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+
+

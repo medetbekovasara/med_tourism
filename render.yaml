@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: medtour
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn med_tourism.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: med_tourism.settings
