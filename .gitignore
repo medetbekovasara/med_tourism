@@ -1,7 +1,18 @@
+# Django
 *.pyc
 __pycache__/
 db.sqlite3
-.env
+
+# Virtual environments
+.env/
 .venv/
-media/
+
+# Media and static
+/media/
 staticfiles/
+*.log
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+
