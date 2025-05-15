@@ -29,7 +29,7 @@
           {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ clinic.name }}</h5>
-            <p class="card-text text-muted">{{ clinic.city }}, {{ clinic.country }}</p>
+            <p class="card-text text-muted">{{ clinic.specializations }}</p>
             <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary btn-sm">Подробнее</a>
           </div>
         </div>

@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-!&id2x4n#(-@n2o*toxc&ys$)&(i&(eg1s7$hb+x@uk)nbuh_5"
+SECRET_KEY = os.getenv("django-insecure-!&id2x4n#(-@n2o*toxc&ys$)&(i&(eg1s7$hb+x@uk)nbuh_5", 'unsafe-secret-for-dev-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.runserver_nostatic',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -93,11 +94,14 @@ WSGI_APPLICATION = "med_tourism.wsgi.application"
 #     }
 # }
 
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -116,7 +120,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -160,3 +176,6 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+from dotenv import load_dotenv
+load_dotenv()
