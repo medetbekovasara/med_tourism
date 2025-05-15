@@ -2,12 +2,15 @@ asgiref==3.8.1
 certifi==2025.4.26
 charset-normalizer==3.4.2
 dj-config-url==0.1.1
-dj-database-url==1.0.0
+dj-database-url==2.3.0
 Django==4.2.19
 dotenv==0.9.9
 gunicorn==23.0.0
 idna==3.10
 packaging==25.0
+pillow==11.1.0
+psycopg==3.2.5
+psycopg2-binary==2.9.10
 python-dateutil==1.5
 python-dotenv==1.1.0
 requests==2.32.3
