@@ -1,1 +1,1 @@
-web: gunicorn med_tourism.wsgi
+web: gunicorn config.wsgi
