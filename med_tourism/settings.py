@@ -14,6 +14,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import dj_database_url
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("django-insecure-!&id2x4n#(-@n2o*toxc&ys$)&(i&(eg1s7$hb+x@uk)nbuh_5", 'unsafe-secret-for-dev-only')
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", 'unsafe-secret-for-dev-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
@@ -48,7 +50,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'whitenoise.runserver_nostatic',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
