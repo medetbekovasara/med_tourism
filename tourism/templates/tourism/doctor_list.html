@@ -1,33 +1,125 @@
 {% extends "base.html" %}
 
-{% block title %}Список Врачей | MedTour{% endblock %}
+{% block title %}Doctors | MedTour{% endblock %}
 
 {% block content %}
-<section class="container py-5">
-  <h2 class="text-center section-title mb-4">Наши Врачи</h2>
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
-    {% for doctor in doctors %}
-    <div class="col">
-      <div class="card card-doctor shadow-sm h-100 d-flex flex-row align-items-center p-4">
-        <img src="{{ doctor.photo.url }}" class="img-fluid rounded me-4" alt="{{ doctor.name }}" style="width: 150px; height: 150px; object-fit: cover;">
-        <div class="flex-grow-1">
-          <h4 class="card-title mb-2">{{ doctor.name }}</h4>
-          <p class="mb-2"><strong>Специализация:</strong> {{ doctor.specialty }}</p>
-          <p class="mb-2"><strong>Опыт работы:</strong> {{ doctor.experience }} лет</p>
-          <p class="text-warning mb-3">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </p>
-          <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-outline-primary btn-sm">Подробнее</a>
+<!-- Page Header -->
+<section class="py-5" style="background: var(--secondary-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold text-white mb-3">Expert Doctors</h1>
+                <p class="lead text-white mb-0">Connect with world-renowned medical specialists</p>
+            </div>
         </div>
-      </div>
     </div>
-    {% endfor %}
-  </div>
+</section>
+
+<!-- Search Section -->
+<section class="py-4 bg-white shadow-sm">
+    <div class="container">
+        <form method="GET" action="{% url 'search_results' %}" class="row g-3 align-items-end">
+            <div class="col-lg-8">
+                <label class="form-label fw-semibold">Search Doctors</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control form-control-modern border-start-0"
+                           placeholder="Search by doctor name or specialty..." value="{{ request.GET.q }}">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <button type="submit" class="btn btn-primary-modern w-100">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Doctors Grid -->
+<section class="section-modern">
+    <div class="container">
+        <div class="row g-4">
+            {% for doctor in doctors %}
+            <div class="col-lg-4 col-md-6">
+                <div class="modern-card text-center h-100">
+                    <div class="p-4">
+                        <!-- Doctor Photo -->
+                        {% if doctor.photo %}
+                            <img src="{{ doctor.photo.url }}" class="rounded-circle mb-3"
+                                 alt="{{ doctor.name }}" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #f8f9fa;">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3"
+                                 style="width: 120px; height: 120px;">
+                                <i class="fas fa-user-md text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        {% endif %}
+
+                        <!-- Doctor Name -->
+                        <h5 class="fw-bold mb-2">{{ doctor.name }}</h5>
+
+                        <!-- Doctor Specialty -->
+                        <p class="text-primary fw-semibold mb-3">{{ doctor.specialty }}</p>
+
+                        <!-- Experience -->
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-graduation-cap me-1"></i>{{ doctor.experience }} years experience
+                            </span>
+                        </div>
+
+                        <!-- Clinic -->
+                        {% if doctor.clinic %}
+                        <p class="text-muted mb-4">
+                            <i class="fas fa-hospital me-2"></i>{{ doctor.clinic.name }}
+                        </p>
+                        {% endif %}
+
+                        <!-- Available Dates -->
+                        {% if doctor.available_dates %}
+                        <div class="mb-4">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>Available: {{ doctor.available_dates|truncatewords:5 }}
+                            </small>
+                        </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-primary-modern">
+                                <i class="fas fa-eye me-2"></i>View Profile
+                            </a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'book_consultation' doctor.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar-plus me-2"></i>Book Consultation
+                            </a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+        Log in to book
+    </a>
+{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-user-md text-muted mb-3" style="font-size: 4rem;"></i>
+                    <h3 class="text-muted">No doctors found</h3>
+                    <p class="text-muted">No doctors are available at the moment.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary-modern">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 {% endblock %}
+
 
 

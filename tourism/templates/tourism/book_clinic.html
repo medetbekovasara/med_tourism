@@ -1,53 +1,1138 @@
 {% extends "base.html" %}
 
-{% block title %}Бронирование Клиники{% endblock %}
+{% block title %}
+    {% if clinic %}
+        Запись в {{ clinic.name }} | MedTour
+    {% else %}
+        Запись в клинику | MedTour
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4 mb-3 text-center">Бронирование Клиники</h2>
+<!-- Booking Header -->
+<section class="booking-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: -80px; padding-top: 150px; padding-bottom: 80px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home' %}" class="text-white-50 text-decoration-none">
+                                <i class="fas fa-home me-1"></i>Главная
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'clinic_list' %}" class="text-white-50 text-decoration-none">Клиники</a>
+                        </li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Запись на прием</li>
+                    </ol>
+                </nav>
 
-    {% if messages %}
-        <div class="alert alert-info">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
+                <!-- Header Content -->
+                <div class="text-center text-white">
+                    <div class="mb-4">
+                        <i class="fas fa-calendar-plus" style="font-size: 4rem; opacity: 0.8;"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold mb-3">Запись на прием</h1>
+                    <p class="lead mb-4 ">
+                        {% if clinic %}
+                            Заполните форму ниже, чтобы записаться на прием в клинику {{ clinic.name }}
+                        {% else %}
+                            Заполните форму ниже, чтобы записаться на прием в клинику
+                        {% endif %}
+                    </p>
+
+                    <!-- Clinic Quick Info (только если клиника выбрана) -->
+                    {% if clinic %}
+                    <div class="clinic-header-info bg-white bg-opacity-20 rounded-4 p-4 d-inline-block text-black">
+                        <div class="d-flex align-items-center">
+                            {% if clinic.photo %}
+                                <img src="{{ clinic.photo.url }}"
+                                     class="rounded-circle me-3"
+                                     alt="{{ clinic.name }}"
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-white bg-opacity-30 rounded-circle d-flex align-items-center justify-content-center me-3"
+                                     style="width: 60px; height: 60px;">
+                                    <i class="fas fa-hospital text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div class="text-start">
+                                <h5 class="fw-bold mb-1">{{ clinic.name }}</h5>
+                                <p class="mb-0 opacity-75">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ clinic.address }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% endif %}
+    </div>
+</section>
 
-    <div class="card shadow-lg p-4">
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label">Выберите клинику:</label>
-                {{ form.clinic }}
-            </div>
+<!-- Main Booking Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Success/Error Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-            <div class="mb-3">
-                <label class="form-label">Выберите врача:</label>
-                {{ form.doctor }}
-            </div>
+                <!-- Form Errors -->
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+                        <ul class="mb-0 mt-2">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close"></button>
+                    </div>
+                {% endif %}
 
-            <div class="mb-3">
-                <label class="form-label">Выберите отделение:</label>
-                {{ form.department }}
-            </div>
+                <!-- Main Form Card -->
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <!-- Clinic Info Banner (только если клиника выбрана) -->
+                        {% if clinic %}
+                        <div class="clinic-info-banner mb-5 p-4 bg-light rounded-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    {% if clinic.photo %}
+                                        <img src="{{ clinic.photo.url }}"
+                                             class="img-fluid rounded-3 w-100"
+                                             alt="{{ clinic.name }}"
+                                             style="height: 120px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center w-100"
+                                             style="height: 120px;">
+                                            <i class="fas fa-hospital text-primary fa-3x"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-8">
+                                    <h4 class="fw-bold mb-2">{{ clinic.name }}</h4>
+                                    <p class="text-muted mb-3">{{ clinic.description|truncatewords:20 }}</p>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-user-md me-1"></i>{{ clinic.doctor_set.count }} врачей
+                                        </span>
+                                        <span class="badge bg-info fs-6">
+                                            <i class="fas fa-star me-1"></i>4.8 рейтинг
+                                        </span>
+                                        <span class="badge bg-warning fs-6">
+                                            <i class="fas fa-certificate me-1"></i>Сертифицирована
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Дата начала:</label>
-                    {{ form.start_date }}
+                        <!-- Booking Form -->
+                        <form method="post" class="booking-form" id="clinicBookingForm">
+                            {% csrf_token %}
+
+                            <!-- Clinic Selection (если клиника не выбрана) -->
+                            {% if not clinic %}
+                            <div class="form-section mb-5">
+                                <h5 class="section-title mb-4">
+                                    <i class="fas fa-hospital text-primary me-2"></i>
+                                    Выбор клиники
+                                </h5>
+
+                                <div class="mb-4">
+                                    <label for="{{ form.clinic.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-hospital text-primary me-2"></i>Клиника *
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-hospital text-muted"></i>
+                                        </span>
+                                        {{ form.clinic }}
+                                    </div>
+                                    {% if form.clinic.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ form.clinic.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Выберите клинику для записи на прием
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if clinic %}
+                            <input type="hidden" name="clinic" value="{{ clinic.id }}">
+                        {% else %}
+                            {{ form.clinic }}
+                        {% endif %}
+
+
+                            <!-- Doctor and Department Selection Section -->
+                            <div class="form-section mb-5">
+                                <h5 class="section-title mb-4">
+                                    <i class="fas fa-user-md text-primary me-2"></i>
+                                    Выбор врача и отделения
+                                </h5>
+
+                                <div class="row g-4">
+                                    <!-- Doctor Selection -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.doctor.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-stethoscope text-success me-2"></i>Врач *
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-user-md text-muted"></i>
+                                            </span>
+                                            {{ form.doctor }}
+                                        </div>
+                                        {% if form.doctor.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.doctor.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Выберите врача, к которому хотите записаться
+                                        </div>
+                                    </div>
+
+                                    <!-- Department Selection -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.department.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-building text-info me-2"></i>Отделение *
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-building text-muted"></i>
+                                            </span>
+                                            {{ form.department }}
+                                        </div>
+                                        {% if form.department.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.department.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Укажите отделение клиники
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dates Section -->
+                            <div class="form-section mb-5">
+                                <h5 class="section-title mb-4">
+                                    <i class="fas fa-calendar text-warning me-2"></i>
+                                    Период лечения
+                                </h5>
+
+                                <div class="row g-4">
+                                    <!-- Start Date -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.start_date.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-calendar-plus text-success me-2"></i>Дата начала *
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-calendar text-muted"></i>
+                                            </span>
+                                            {{ form.start_date }}
+                                        </div>
+                                        {% if form.start_date.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.start_date.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Выберите дату начала лечения
+                                        </div>
+                                    </div>
+
+                                    <!-- End Date -->
+                                    <div class="col-md-6">
+                                        <label for="{{ form.end_date.id_for_label }}" class="form-label fw-semibold">
+                                            <i class="fas fa-calendar-minus text-danger me-2"></i>Дата окончания *
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-calendar text-muted"></i>
+                                            </span>
+                                            {{ form.end_date }}
+                                        </div>
+                                        {% if form.end_date.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.end_date.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Выберите дату окончания лечения
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Date Range Info -->
+                                <div class="mt-3">
+                                    <div class="alert alert-light border">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-calendar-alt text-primary me-3"></i>
+                                            <div>
+                                                <h6 class="mb-1">Информация о датах</h6>
+                                                <small class="text-muted">
+                                                    Укажите период, в течение которого планируете проходить лечение в клинике.
+                                                    Точное расписание приемов будет согласовано с врачом.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Important Notice -->
+                            <div class="alert alert-info mb-4">
+                                <div class="d-flex">
+                                    <i class="fas fa-info-circle text-info me-3 mt-1"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-2">Важная информация</h6>
+                                        <ul class="mb-0 small">
+                                            <li>После отправки заявки с вами свяжется администратор клиники для подтверждения записи</li>
+                                            <li>Время приемов будет согласовано дополнительно с выбранным врачом</li>
+                                            <li>При себе необходимо иметь документ, удостоверяющий личность</li>
+                                            <li>Отмена или перенос записи возможны не позднее чем за 24 часа</li>
+                                            <li>Стоимость лечения будет рассчитана индивидуально</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Agreement -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreement" required>
+                                    <label class="form-check-label" for="agreement">
+                                        Я согласен с
+                                        <a href="#" class="text-decoration-none">условиями обслуживания</a>
+                                        и
+                                        <a href="#" class="text-decoration-none">политикой конфиденциальности</a>
+                                    </label>
+                                    <div class="invalid-feedback">
+                                        Необходимо согласиться с условиями обслуживания
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-calendar-plus me-2"></i>
+                                    Отправить заявку на запись
+                                </button>
+
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <a href="{% url 'clinic_list' %}" class="btn btn-outline-secondary w-100">
+                                            <i class="fas fa-arrow-left me-2"></i>
+                                            Вернуться к клиникам
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-outline-info w-100">
+                                            <i class="fas fa-phone me-2"></i>
+                                            Связаться с клиникой
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Дата окончания:</label>
-                    {{ form.end_date }}
+
+                <!-- Available Doctors Preview -->
+                {% if clinic and clinic.doctor_set.all %}
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-users text-primary me-2"></i>
+                            Врачи клиники {{ clinic.name }}
+                        </h5>
+
+                        <div class="row g-3">
+                            {% for doctor in clinic.doctor_set.all %}
+                            <div class="col-md-6">
+                                <div class="doctor-preview-card p-3 border rounded-3 bg-light">
+                                    <div class="d-flex align-items-start">
+                                        {% if doctor.photo %}
+                                            <img src="{{ doctor.photo.url }}"
+                                                 class="rounded-circle me-3 flex-shrink-0"
+                                                 alt="{{ doctor.name }}"
+                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="bg-primary bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                                 style="width: 50px; height: 50px;">
+                                                <i class="fas fa-user-md text-primary"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="flex-grow-1">
+                                            <h6 class="fw-bold mb-1">{{ doctor.name }}</h6>
+                                            <p class="text-primary small mb-1">{{ doctor.specialty }}</p>
+                                            <p class="text-muted small mb-0">
+                                                <i class="fas fa-graduation-cap me-1"></i>{{ doctor.experience }} лет опыта
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Booking Status Info -->
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4">
+                            <i class="fas fa-clipboard-list text-success me-2"></i>
+                            Статусы записи
+                        </h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="status-card p-3 border rounded-3 text-center">
+                                    <div class="status-icon mb-2">
+                                        <i class="fas fa-clock text-warning fa-2x"></i>
+                                    </div>
+                                    <h6 class="fw-bold">В ожидании</h6>
+                                    <small class="text-muted">Заявка отправлена, ожидается подтверждение</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="status-card p-3 border rounded-3 text-center">
+                                    <div class="status-icon mb-2">
+                                        <i class="fas fa-check-circle text-success fa-2x"></i>
+                                    </div>
+                                    <h6 class="fw-bold">Подтверждено</h6>
+                                    <small class="text-muted">Запись подтверждена, можете приходить</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="status-card p-3 border rounded-3 text-center">
+                                    <div class="status-icon mb-2">
+                                        <i class="fas fa-times-circle text-danger fa-2x"></i>
+                                    </div>
+                                    <h6 class="fw-bold">Отменено</h6>
+                                    <small class="text-muted">Запись была отменена</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+   <div class="card shadow-sm border-0 mt-4">
+    <div class="card-body p-4">
+        <h5 class="card-title mb-4">
+            <i class="fas fa-question-circle text-info me-2"></i>
+            Часто задаваемые вопросы
+        </h5>
+
+        <div class="accordion" id="faqAccordion">
+
+            <!-- FAQ 1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq1">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapse1"
+                            aria-expanded="false" aria-controls="collapse1">
+                        Как быстро подтвердят мою запись?
+                    </button>
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse"
+                     aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Обычно администратор клиники связывается с пациентами в течение 2–4 часов в рабочее время.
+                        В выходные дни ответ может занять до 24 часов.
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Забронировать</button>
-                <a href="{% url 'clinic_list' %}" class="btn btn-secondary">Назад</a>
+            <!-- FAQ 2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq2">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapse2"
+                            aria-expanded="false" aria-controls="collapse2">
+                        Можно ли изменить дату записи?
+                    </button>
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse"
+                     aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Да, вы можете изменить дату записи, связавшись с администратором клиники не позднее чем за 24 часа до назначенного времени.
+                    </div>
+                </div>
             </div>
-        </form>
+
+            <!-- FAQ 3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq3">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapse3"
+                            aria-expanded="false" aria-controls="collapse3">
+                        Что нужно взять с собой на прием?
+                    </button>
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse"
+                     aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Обязательно возьмите с собой документ, удостоверяющий личность, медицинскую карту (если есть),
+                        результаты предыдущих обследований и список принимаемых лекарств.
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">
+                    <i class="fas fa-phone text-primary me-2"></i>
+                    Контакты клиники {% if clinic %}{{ clinic.name }}{% endif %}
+                </h5>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="contact-info">
+                    {% if clinic %}
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-hospital text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-1">{{ clinic.name }}</h6>
+                                <p class="text-muted mb-0">{{ clinic.description|truncatewords:15 }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt text-danger me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Адрес</h6>
+                                <p class="text-muted mb-0">{{ clinic.address }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-phone text-success me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Телефон</h6>
+                                <p class="text-muted mb-0">
+                                    <a href="tel:+77771234567" class="text-decoration-none">+7 (777) 123-45-67</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope text-info me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Email</h6>
+                                <p class="text-muted mb-0">
+                                    <a href="mailto:info@medtour.kz" class="text-decoration-none">info@medtour.kz</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-warning me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Режим работы</h6>
+                                <p class="text-muted mb-0">
+                                    Пн-Пт: 8:00-20:00<br>
+                                    Сб-Вс: 9:00-18:00
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary">Закрыть</button>
+                <a href="tel:+77771234567" class="btn btn-primary">
+                    <i class="fas fa-phone me-2"></i>Позвонить
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+.booking-header {
+    position: relative;
+}
+
+.booking-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,80"/></svg>') no-repeat bottom;
+    background-size: cover;
+}
+
+.clinic-header-info {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-section {
+    position: relative;
+    padding-left: 20px;
+}
+
+.form-section::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 10px;
+}
+
+.input-group-text {
+    border-right: none;
+    background-color: #f8f9fa;
+}
+
+.form-control, .form-select {
+    border-left: none;
+    border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.doctor-preview-card, .status-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef !important;
+}
+
+.doctor-preview-card:hover, .status-card:hover {
+    border-color: #667eea !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.contact-item {
+    padding: 15px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.status-card {
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.status-card:hover {
+    background: #e9ecef;
+    transform: scale(1.05);
+}
+
+.accordion-button {
+    font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.2);
+}
+
+.clinic-info-banner {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.form-check-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .booking-header {
+        padding-top: 120px !important;
+        padding-bottom: 60px !important;
+    }
+
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .clinic-header-info {
+        padding: 20px !important;
+    }
+
+    .clinic-header-info .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .clinic-header-info .text-start {
+        text-align: center !important;
+        margin-top: 15px;
+    }
+
+    .form-section {
+        padding-left: 15px;
+    }
+
+    .form-section::before {
+        width: 3px;
+    }
+
+    .clinic-info-banner .row {
+        text-align: center;
+    }
+
+    .clinic-info-banner .col-md-4 {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 20px !important;
+    }
+
+    .clinic-info-banner {
+        padding: 20px !important;
+    }
+
+    .doctor-preview-card .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .doctor-preview-card img,
+    .doctor-preview-card .bg-primary {
+        margin: 0 auto 15px auto;
+    }
+}
+</style>
+
+<!-- Custom JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.getElementById('clinicBookingForm');
+    const agreementCheckbox = document.getElementById('agreement');
+
+    form.addEventListener('submit', function(e) {
+        if (!agreementCheckbox.checked) {
+            e.preventDefault();
+            agreementCheckbox.classList.add('is-invalid');
+            agreementCheckbox.focus();
+
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger mt-3';
+            errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Необходимо согласиться с условиями обслуживания';
+            agreementCheckbox.parentNode.appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+    });
+
+    agreementCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            this.classList.remove('is-invalid');
+        }
+    });
+
+    // Date validation
+    const startDateInput = document.querySelector('input[name="start_date"]');
+    const endDateInput = document.querySelector('input[name="end_date"]');
+
+    if (startDateInput && endDateInput) {
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.min = today;
+        endDateInput.min = today;
+
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = this.value;
+            if (endDateInput.value && endDateInput.value < this.value) {
+                endDateInput.value = '';
+                showDateError('Дата окончания не может быть раньше даты начала');
+            }
+            updateDateInfo();
+        });
+
+        endDateInput.addEventListener('change', function() {
+            if (startDateInput.value && this.value < startDateInput.value) {
+                this.value = '';
+                showDateError('Дата окончания не может быть раньше даты начала');
+            }
+            updateDateInfo();
+        });
+    }
+
+    // Doctor selection change handler
+    const doctorSelect = document.querySelector('select[name="doctor"]');
+    if (doctorSelect) {
+        doctorSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                highlightDoctorCard(selectedOption.text);
+            }
+        });
+    }
+
+    // Clinic selection change handler (для динамической загрузки врачей)
+    const clinicSelect = document.querySelector('select[name="clinic"]');
+    if (clinicSelect && doctorSelect) {
+        clinicSelect.addEventListener('change', function() {
+            const clinicId = this.value;
+            if (clinicId) {
+                // Очищаем список врачей
+                doctorSelect.innerHTML = '<option value="">Загрузка врачей...</option>';
+
+                // Здесь можно добавить AJAX запрос для загрузки врачей выбранной клиники
+                // Пока что просто показываем все врачи
+                setTimeout(() => {
+                    doctorSelect.innerHTML = '<option value="">Выберите врача</option>';
+                    // Добавить опции врачей через AJAX
+                }, 500);
+            }
+        });
+    }
+
+    // Auto-dismiss alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        if (!alert.classList.contains('alert-light')) {
+            setTimeout(function() {
+                if (alert.querySelector('.btn-close')) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
+    });
+
+    // Smooth scroll to form on page load if there are errors
+    if (document.querySelector('.alert-danger')) {
+        document.querySelector('.booking-form').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    // Helper functions
+    function showDateError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-warning alert-dismissible fade show mt-2';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-triangle me-2"></i>${message}
+            <button type="button" class="btn-close"></button>
+        `;
+
+        const dateSection = document.querySelector('.form-section:nth-child(3)');
+        dateSection.appendChild(errorDiv);
+
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 4000);
+    }
+
+    function updateDateInfo() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            const infoDiv = document.querySelector('.alert-light');
+            if (infoDiv) {
+                const newContent = `
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-calendar-alt text-primary me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Период лечения: ${diffDays} дней</h6>
+                            <small class="text-muted">
+                                С ${formatDate(startDate)} по ${formatDate(endDate)}.
+                                Точное расписание приемов будет согласовано с врачом.
+                            </small>
+                        </div>
+                    </div>
+                `;
+                infoDiv.innerHTML = newContent;
+            }
+        }
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    function highlightDoctorCard(doctorName) {
+        // Remove previous highlights
+        document.querySelectorAll('.doctor-preview-card').forEach(card => {
+            card.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+        });
+
+        // Highlight selected doctor
+        document.querySelectorAll('.doctor-preview-card').forEach(card => {
+            const nameElement = card.querySelector('h6');
+            if (nameElement && nameElement.textContent.includes(doctorName.split(' - ')[0])) {
+                card.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+                card.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            }
+        });
+    }
+
+    // Form field animations
+    const formInputs = document.querySelectorAll('.form-control, .form-select');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentNode.classList.add('shadow-sm');
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentNode.classList.remove('shadow-sm');
+        });
+    });
+
+    // Loading state for submit button
+    form.addEventListener('submit', function() {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Отправка заявки...';
+
+        // Re-enable button after 3 seconds (in case of validation errors)
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }, 3000);
+    });
+
+    // Tooltip initialization
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// Additional utility functions
+function showSuccessMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>${message}
+        <button type="button" class="btn-close"></button>
+    `;
+
+    const container = document.querySelector('.container .row .col-lg-8');
+    container.insertBefore(alertDiv, container.firstChild);
+
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            const bsAlert = new bootstrap.Alert(alertDiv);
+            bsAlert.close();
+        }
+    }, 5000);
+}
+
+// Phone number formatting (if needed)
+function formatPhoneNumber(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length >= 1) {
+        value = '+7 (' + value.substring(1, 4) + ') ' + value.substring(4, 7) + '-' + value.substring(7, 9) + '-' + value.substring(9, 11);
+    }
+    input.value = value;
+}
+
+// Form validation helper
+function validateForm() {
+    const form = document.getElementById('clinicBookingForm');
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+
+    return isValid;
+}
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const clinicSelect = document.getElementById("id_clinic");
+        const doctorSelect = document.getElementById("id_doctor");
+
+        if (clinicSelect) {
+            clinicSelect.addEventListener("change", function () {
+                const clinicId = this.value;
+
+                fetch(`/ajax/get-doctors/?clinic_id=${clinicId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        doctorSelect.innerHTML = ""; // очищаем старые значения
+                        const defaultOption = document.createElement("option");
+                        defaultOption.value = "";
+                        defaultOption.text = "Выберите врача";
+                        doctorSelect.appendChild(defaultOption);
+
+                        data.doctors.forEach(doctor => {
+                            const option = document.createElement("option");
+                            option.value = doctor.id;
+                            option.text = doctor.name;
+                            doctorSelect.appendChild(option);
+                        });
+                    });
+            });
+        }
+    });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const doctorSelect = document.getElementById("id_doctor");
+    const departmentInput = document.getElementById("id_department");
+
+    if (doctorSelect) {
+        doctorSelect.addEventListener("change", function () {
+            const doctorId = this.value;
+
+            if (doctorId) {
+                fetch(`/ajax/get-doctor-specialty/?doctor_id=${doctorId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        departmentInput.value = data.specialty || "";
+                    });
+            } else {
+                departmentInput.value = "";
+            }
+        });
+    }
+});
+
+</script>
 {% endblock %}

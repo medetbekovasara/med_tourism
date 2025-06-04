@@ -1,123 +1,145 @@
-{% extends "base.html" %}
 
-{% block title %}Главная - MedTour{% endblock %}
+
+
+
+
+{% extends 'base.html' %}
 
 {% block content %}
-<!-- Hero-блок -->
-<section class="hero-section d-flex align-items-center text-white text-center" style="background: linear-gradient(to right, #007bff, #00c6ff); min-height: 60vh;">
+<!-- Hero Section -->
+<section class="hero-modern">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold text-white mb-4 fade-in-up">
+                    Your Health Journey Starts Here
+                </h1>
+                <p class="lead text-white mb-5 fade-in-up" style="animation-delay: 0.2s;">
+                    Discover world-class medical care combined with premium hospitality.
+                    Connect with top specialists and luxury accommodations worldwide.
+                </p>
+                <div class="fade-in-up" style="animation-delay: 0.4s;">
+                    <a href="{% url 'clinic_list' %}" class="btn btn-primary-modern btn-lg me-3 mb-3">
+                        <i class="fas fa-search me-2"></i>Find Clinics
+                    </a>
+                    <a href="{% url 'doctor_list' %}" class="btn btn-secondary-modern btn-lg mb-3">
+                        <i class="fas fa-user-md me-2"></i>Browse Doctors
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-image fade-in-up" style="animation-delay: 0.6s;">
+                    <i class="fas fa-heartbeat" style="font-size: 15rem; color: rgba(255,255,255,0.2);"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section-modern">
     <div class="container">
-        <h1 class="mb-3">Лечение за границей</h1>
-        <p class="lead mb-4">Найдите лучшую клинику, врача или отель для медицинского туризма</p>
-        <form method="GET" action="{% url 'search_results' %}" class="d-flex justify-content-center mt-4">
-    <input type="text" name="q" class="form-control w-50 me-2" placeholder="Поиск клиники, врача или услуги">
-    <button type="submit" class="btn btn-light px-4">Найти</button>
-</form>
+        <h2 class="section-title">Why Choose MedTour?</h2>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="modern-card text-center p-4 h-100">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-award" style="font-size: 3rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">World-Class Care</h4>
+                    <p class="text-muted">Access to internationally accredited hospitals and board-certified specialists.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="modern-card text-center p-4 h-100">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-plane" style="font-size: 3rem; background: var(--secondary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Travel Made Easy</h4>
+                    <p class="text-muted">Complete travel assistance including visa support and luxury accommodations.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="modern-card text-center p-4 h-100">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; background: var(--success-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Safe & Secure</h4>
+                    <p class="text-muted">Your safety and privacy are our top priorities with 24/7 support.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- Популярные клиники -->
-<section class="container my-5">
-  <h2 class="section-title text-center mb-4">Популярные клиники</h2>
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for clinic in clinics %}
-      <div class="col">
-        <div class="card h-100 shadow-sm border-0">
-          {% if clinic.photo %}
-            <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
-          {% else %}
-            <img src="https://via.placeholder.com/400x250?text={{ clinic.name|urlencode }}" class="card-img-top" alt="{{ clinic.name }}">
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title">{{ clinic.name }}</h5>
-            <p class="card-text text-muted">{{ clinic.specializations }}</p>
-            <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary btn-sm">Подробнее</a>
-          </div>
+<!-- Featured Clinics -->
+<section class="section-modern bg-light">
+    <div class="container">
+        <h2 class="section-title">Featured Clinics</h2>
+        <div class="row g-4">
+            {% for clinic in clinics %}
+            <div class="col-lg-4 col-md-6">
+                <div class="modern-card h-100">
+                    {% if clinic.photo %}
+                        <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-gradient-primary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fas fa-hospital text-white" style="font-size: 4rem; opacity: 0.7;"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-3">{{ clinic.name }}</h5>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>{{ clinic.address }}
+                        </p>
+                        <p class="card-text text-muted mb-4">{{ clinic.description|truncatewords:15 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="specializations">
+                                {% for spec in clinic.specializations.all|slice:":2" %}
+                                    <span class="badge bg-primary me-1">{{ spec.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary-modern btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No clinics available at the moment.</p>
+            </div>
+            {% endfor %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'clinic_list' %}" class="btn btn-primary-modern btn-lg">
+                <i class="fas fa-hospital me-2"></i>View All Clinics
+            </a>
+        </div>
+    </div>
 </section>
 
-<!-- Популярные направления лечения в Кыргызстане -->
-<section class="container my-5">
-  <h2 class="section-title text-center">Популярные направления лечения в Кыргызстане</h2>
-  <div class="row text-center g-4 mt-4">
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
-        <img src="https://images.ctfassets.net/sn2lbnot42sd/1Q19q9G7S51Mi9jFVrwiH6/d849d0e26072c42658fd4510f76c0424/35_0-ru-ru" class="card-img-top" alt="Стоматология">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Стоматология</h5>
-          <p class="card-text">Эстетическая и терапевтическая стоматология по доступной цене и с современным оборудованием.</p>
+<!-- CTA Section -->
+<section class="section-modern">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="modern-card p-5" style="background: var(--primary-gradient); color: white;">
+                    <h2 class="fw-bold mb-4">Ready to Start Your Health Journey?</h2>
+                    <p class="lead mb-4">Join thousands of satisfied patients who chose MedTour for their medical needs.</p>
+                    <a href="{% url 'clinic_list' %}" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-calendar-check me-2"></i>Book Now
+                    </a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
-        <img src="https://czar.kg/wp-content/uploads/2019/12/cardiology.jpg" class="card-img-top" alt="Кардиология">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Кардиология</h5>
-          <p class="card-text">Диагностика и лечение сердечно-сосудистых заболеваний с участием высококвалифицированных специалистов.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm h-100">
-        <img src="https://greenvillagemedical.com/wp-content/uploads/2024/03/face-surgery.webp" class="card-img-top" alt="Пластическая хирургия">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Пластическая хирургия</h5>
-          <p class="card-text">Операции различной сложности, включая ринопластику, блефаропластику и контурную пластику лица.</p>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
-
-<!-- Как это работает -->
-<section class="py-5" style="background: linear-gradient(135deg, #e6f0fb, #ffffff);">
-  <div class="container">
-    <h2 class="section-title text-center fw-bold text-primary mb-5" style="font-size: 2rem;">Как работает MedTour</h2>
-    <div class="row text-center g-4">
-      <div class="col-md-3">
-        <div class="p-4 bg-white rounded shadow-sm h-100">
-          <img src="https://cdn-icons-png.flaticon.com/512/54/54481.png" alt="Поиск" width="60">
-          <h5 class="fw-semibold mt-3">1. Найдите клинику</h5>
-          <p class="text-muted small">Выберите медицинское учреждение, специализацию и подходящего врача.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-4 bg-white rounded shadow-sm h-100">
-          <img src="https://cdn-icons-png.flaticon.com/512/3771/3771344.png" alt="Консультация" width="60">
-          <h5 class="fw-semibold mt-3">2. Получите консультацию</h5>
-          <p class="text-muted small">Запросите онлайн-консультацию или уточните детали через нашего менеджера.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-4 bg-white rounded shadow-sm h-100">
-          <img src="https://cdn-icons-png.flaticon.com/512/8832/8832108.png" alt="Бронирование" width="60">
-          <h5 class="fw-semibold mt-3">3. Забронируйте услугу</h5>
-          <p class="text-muted small">Подтвердите лечение, забронируйте клинику и получите помощь с организацией.</p>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="p-4 bg-white rounded shadow-sm h-100">
-          <img src="https://cdn-icons-png.flaticon.com/512/2774/2774060.png" alt="Лечение" width="60">
-          <h5 class="fw-semibold mt-3">4. Пройдите лечение</h5>
-          <p class="text-muted small">Приезжайте в Кыргызстан, пройдите курс лечения и восстановление в комфорте.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
 {% endblock %}
-
-
-
-
-
-
 
 
 

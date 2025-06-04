@@ -1,32 +1,130 @@
 {% extends "base.html" %}
 
-{% block title %}Клиники | MedTour{% endblock %}
+{% block title %}Clinics | MedTour{% endblock %}
 
 {% block content %}
-<section class="container my-5">
-  <h2 class="section-title text-center mb-4">Лучшие клиники для вашего здоровья</h2>
-  <div class="row">
-    {% for clinic in clinics %}
-    <div class="col-md-4 mb-4">
-      <div class="card shadow-sm transition card-clinic h-100">
-        {% if clinic.photo %}
-        <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
-        {% else %}
-        <img src="https://via.placeholder.com/400x220.png?text=No+Image" class="card-img-top" alt="Клиника">
-        {% endif %}
-        <div class="card-body text-center">
-          <h5 class="card-title">{{ clinic.name }}</h5>
-          <p class="card-text text-muted">{{ clinic.address }}</p>
-          <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-outline-primary">Подробнее</a>
+<!-- Page Header -->
+<section class="py-5" style="background: var(--primary-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold text-white mb-3">World-Class Clinics</h1>
+                <p class="lead text-white mb-0">Discover premium healthcare facilities around the globe</p>
+            </div>
         </div>
-      </div>
     </div>
-    {% empty %}
-    <p class="text-center">Пока нет доступных клиник.</p>
-    {% endfor %}
-  </div>
+</section>
+
+<!-- Search Section -->
+<section class="py-4 bg-white shadow-sm">
+    <div class="container">
+        <form method="GET" action="{% url 'search_results' %}" class="row g-3 align-items-end">
+            <div class="col-lg-8">
+                <label class="form-label fw-semibold">Search Clinics</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control form-control-modern border-start-0"
+                           placeholder="Search by clinic name or description..." value="{{ request.GET.q }}">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <button type="submit" class="btn btn-primary-modern w-100">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Clinics Grid -->
+<section class="section-modern">
+    <div class="container">
+        <div class="row g-4">
+            {% for clinic in clinics %}
+            <div class="col-lg-6 col-xl-4">
+                <div class="modern-card h-100">
+                    <!-- Clinic Photo -->
+                    {% if clinic.photo %}
+                        <div class="position-relative overflow-hidden">
+                            <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}"
+                                 style="height: 250px; object-fit: cover; transition: transform 0.3s ease;">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-certificate me-1"></i>Verified
+                                </span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
+                            <i class="fas fa-hospital text-muted" style="font-size: 4rem;"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body p-4">
+                        <!-- Clinic Name -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title fw-bold mb-0">{{ clinic.name }}</h5>
+                            <button class="btn btn-sm btn-outline-danger border-0">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <!-- Clinic Address -->
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ clinic.address }}
+                        </p>
+
+                        <!-- Clinic Description -->
+                        <p class="card-text text-muted mb-3">{{ clinic.description|truncatewords:20 }}</p>
+
+                        <!-- Specializations -->
+                        <div class="specializations mb-4">
+                            {% if clinic.specializations %}
+                                <span class="badge bg-light text-dark me-1 mb-1">
+                                    <i class="fas fa-stethoscope me-1"></i>{{ clinic.specializations|truncatewords:3 }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-light text-muted">
+                                    <i class="fas fa-hospital me-1"></i>General Practice
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary-modern">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'book_clinic' clinic.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar-check me-2"></i>Book Appointment
+                            </a>
+                            {% else %}
+    <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+        Log in to book
+    </a>
+{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-hospital text-muted mb-3" style="font-size: 4rem;"></i>
+                    <h3 class="text-muted">No clinics found</h3>
+                    <p class="text-muted">No clinics are available at the moment.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary-modern">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 {% endblock %}
-
 
 

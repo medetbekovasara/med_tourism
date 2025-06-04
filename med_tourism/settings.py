@@ -87,26 +87,26 @@ WSGI_APPLICATION = "med_tourism.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'sara_db',
-#         'USER': 'postgres',
-#         'PASSWORD': '2002',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sara_db',
+        'USER': 'postgres',
+        'PASSWORD': '2002',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# import dj_database_url
+#
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=os.getenv('DATABASE_URL'),
+#         conn_max_age=600,
+#         ssl_require=True
+#     )
+# }
 
 
 # Password validation
@@ -198,8 +198,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 import os
 
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 from dotenv import load_dotenv
 load_dotenv()

@@ -1,49 +1,146 @@
 {% extends "base.html" %}
 
-{% block title %}Результаты поиска{% endblock %}
+{% block title %}Search Results | MedTour{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h2 class="text-center mb-4">Результаты поиска для "{{ query }}"</h2>
-
-    {% if doctors %}
-        <h4>Врачи:</h4>
+<!-- Search Header -->
+<section class="py-5" style="background: var(--dark-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container">
         <div class="row">
-            {% for doctor in doctors %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ doctor.photo.url }}" class="card-img-top" alt="{{ doctor.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ doctor.name }}</h5>
-                        <p class="card-text">Специальность: {{ doctor.specialty }}</p>
-                        <p class="card-text">Опыт: {{ doctor.experience }} лет</p>
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold text-white mb-3">Search Results</h1>
+                {% if query %}
+                    <p class="lead text-white mb-0">Results for "{{ query }}"</p>
+                {% else %}
+                    <p class="lead text-white mb-0">Browse all available options</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Results -->
+<section class="section-modern">
+    <div class="container">
+        <!-- Doctors Results -->
+        {% if doctors %}
+        <div class="mb-5">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-user-md text-primary me-3"></i>Doctors ({{ doctors.count }})
+            </h2>
+            <div class="row g-4">
+                {% for doctor in doctors %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="modern-card text-center h-100">
+                        <div class="p-4">
+                            {% if doctor.photo %}
+                                <img src="{{ doctor.photo.url }}" class="rounded-circle mb-3"
+                                     alt="{{ doctor.name }}" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3"
+                                     style="width: 100px; height: 100px;">
+                                    <i class="fas fa-user-md text-muted" style="font-size: 2.5rem;"></i>
+                                </div>
+                            {% endif %}
+
+                            <h5 class="fw-bold mb-2">{{ doctor.name }}</h5>
+                            <p class="text-primary fw-semibold mb-3">{{ doctor.specialty }}</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-light text-dark">
+                                    <i class="fas fa-graduation-cap me-1"></i>{{ doctor.experience }} years
+                                </span>
+                            </div>
+
+                            {% if doctor.clinic %}
+                            <p class="text-muted mb-4">
+                                <i class="fas fa-hospital me-2"></i>{{ doctor.clinic.name }}
+                            </p>
+                            {% endif %}
+
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-primary-modern btn-sm">
+                                    <i class="fas fa-eye me-2"></i>View Profile
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    {% endif %}
+        {% endif %}
 
-    {% if clinics %}
-        <h4 class="mt-5">Клиники:</h4>
-        <div class="row">
-            {% for clinic in clinics %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ clinic.photo.url }}" class="card-img-top" alt="{{ clinic.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ clinic.name }}</h5>
-                        <p class="card-text">{{ clinic.description|truncatewords:15 }}</p>
+        <!-- Clinics Results -->
+        {% if clinics %}
+        <div class="mb-5">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-hospital text-primary me-3"></i>Clinics ({{ clinics.count }})
+            </h2>
+            <div class="row g-4">
+                {% for clinic in clinics %}
+                <div class="col-lg-6">
+                    <div class="modern-card h-100">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                {% if clinic.photo %}
+                                    <img src="{{ clinic.photo.url }}" class="img-fluid h-100 w-100"
+                                         alt="{{ clinic.name }}" style="object-fit: cover; min-height: 200px;">
+                                {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 200px;">
+                                        <i class="fas fa-hospital text-muted" style="font-size: 3rem;"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body p-4">
+                                    <h5 class="card-title fw-bold mb-3">{{ clinic.name }}</h5>
+
+                                    <p class="text-muted mb-3">
+                                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ clinic.address }}
+                                    </p>
+
+                                    <p class="card-text text-muted mb-3">{{ clinic.description|truncatewords:15 }}</p>
+
+                                    {% if clinic.specializations %}
+                                    <div class="mb-3">
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-stethoscope me-1"></i>{{ clinic.specializations|truncatewords:2 }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'clinic_detail' clinic.id %}" class="btn btn-primary-modern btn-sm">
+                                            <i class="fas fa-eye me-2"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    {% endif %}
+        {% endif %}
 
-    {% if not doctors and not clinics %}
-        <p class="text-center text-muted">По вашему запросу ничего не найдено.</p>
-    {% endif %}
-</div>
+        <!-- No Results -->
+        {% if not doctors and not clinics %}
+        <div class="text-center py-5">
+            <i class="fas fa-search text-muted mb-3" style="font-size: 4rem;"></i>
+            <h3 class="text-muted">No results found</h3>
+            {% if query %}
+                <p class="text-muted">No doctors or clinics match your search for "{{ query }}".</p>
+            {% else %}
+                <p class="text-muted">Try searching for doctors or clinics.</p>
+            {% endif %}
+            <a href="{% url 'home' %}" class="btn btn-primary-modern mt-3">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
 

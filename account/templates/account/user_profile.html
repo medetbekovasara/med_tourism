@@ -1,105 +1,375 @@
 {% extends "base.html" %}
 
-{% block title %}Личный Кабинет{% endblock %}
+{% block title %}Мой профиль | MedTour{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4">Личный Кабинет</h2>
-    <p class="lead">Добро пожаловать, <strong>{{ user.username }}</strong>!</p>
-
-    <div class="row">
-        <!-- Личная информация -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
+<!-- Profile Header -->
+<section class="py-5" style="background: var(--primary-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-3">
+                <div class="text-center">
                     {% if user.userprofile.avatar %}
-                        <img src="{{ user.userprofile.avatar.url }}" alt="Аватар" class="rounded-circle" width="150">
+                        <img src="{{ user.userprofile.avatar.url }}"
+                             class="rounded-circle border border-white border-4 shadow-lg"
+                             alt="{{ user.username }}"
+                             style="width: 150px; height: 150px; object-fit: cover;">
                     {% else %}
-                        <img src="/media/avatars/default.jpg" alt="Аватар по умолчанию" class="rounded-circle" width="150">
+                        <div class="rounded-circle bg-white d-flex align-items-center justify-content-center border border-4 shadow-lg mx-auto"
+                             style="width: 150px; height: 150px;">
+                            <i class="fas fa-user text-primary" style="font-size: 4rem;"></i>
+                        </div>
                     {% endif %}
-                    <h5 class="mt-3">{{ user.username }}</h5>
-                    <p>Email: {{ user.email }}</p>
-                    <p>Телефон: {{ user.userprofile.phone|default:"Не указано" }}</p>
-                    <p>Страна: {{ user.userprofile.country|default:"Не указано" }}</p>
-                    <p>Гражданство: {{ user.userprofile.nationality|default:"Не указано" }}</p>
-                    <p>ID паспорта: {{ user.userprofile.passport_id|default:"Не указано" }}</p>
-                    <p>Дата рождения: {{ user.userprofile.birth_date|default:"Не указано" }}</p>
-                    <a href="{% url 'edit_profile' %}" class="btn btn-primary btn-sm mt-2">Редактировать профиль</a>
-                    <a href="{% url 'logout' %}" class="btn btn-danger btn-sm mt-2">Выйти</a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="text-white">
+                    <h1 class="display-5 fw-bold mb-3">Добро пожаловать, {{ user.username }}!</h1>
+                    <p class="lead mb-4">Управляйте своим профилем и отслеживайте медицинские записи</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <span class="badge bg-white text-primary fs-6 px-3 py-2">
+                            <i class="fas fa-user-check me-2"></i>Верифицированный пользователь
+                        </span>
+                        <span class="badge bg-success fs-6 px-3 py-2">
+                            <i class="fas fa-shield-alt me-2"></i>Активный профиль
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <!-- Бронирования -->
-        <div class="col-md-8">
-            <h4 class="mt-3">Ваши бронирования</h4>
+<!-- Profile Content -->
+<section class="section-modern">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Profile Information -->
+            <div class="col-lg-4">
+                <div class="modern-card p-4 mb-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-user text-primary me-3"></i>Личная информация
+                    </h4>
 
-            <!-- Бронирование клиник -->
-            <h5 class="mt-3">Клиники</h5>
-            {% if clinic_bookings %}
-                <div class="list-group">
-                    {% for booking in clinic_bookings %}
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ booking.clinic.name }}</strong> <br>
-                                <small>Дата: {{ booking.start_date }} - {{ booking.end_date }}</small> <br>
-                                <small>Статус: <span class="badge bg-info">{{ booking.status }}</span></small>
-                            </div>
-                            <a href="{% url 'cancel_booking' 'clinic' booking.id %}" class="btn btn-danger btn-sm">Отменить</a>
-                        </div>
-                    {% endfor %}
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Имя пользователя</label>
+                        <p class="fw-bold mb-0">{{ user.username }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Email</label>
+                        <p class="fw-bold mb-0">{{ user.email }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Телефон</label>
+                        <p class="fw-bold mb-0">{{ user.userprofile.phone|default:"Не указан" }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Страна</label>
+                        <p class="fw-bold mb-0">{{ user.userprofile.country|default:"Не указана" }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Национальность</label>
+                        <p class="fw-bold mb-0">{{ user.userprofile.nationality|default:"Не указана" }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small fw-semibold">Паспорт ID</label>
+                        <p class="fw-bold mb-0">{{ user.userprofile.passport_id|default:"Не указан" }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-muted small fw-semibold">Дата рождения</label>
+                        <p class="fw-bold mb-0">{{ user.userprofile.birth_date|default:"Не указана" }}</p>
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="{% url 'edit_profile' %}" class="btn btn-primary-modern">
+                        <i class="fas fa-edit me-2"></i>Редактировать профиль
+                            </a>
+
+                    </div>
                 </div>
-            {% else %}
-                <p class="text-muted">Вы ещё не бронировали клиники.</p>
-            {% endif %}
 
-            <!-- Бронирование отелей -->
-            <h5 class="mt-3">Отели</h5>
-            {% if hotel_bookings %}
-                <div class="list-group">
-                    {% for booking in hotel_bookings %}
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ booking.hotel_name }}</strong> <br>
-                                <small>С {{ booking.check_in_date }} по {{ booking.check_out_date }}</small> <br>
-                                <small>Статус: <span class="badge bg-info">{{ booking.status }}</span></small>
-                            </div>
-                            <a href="{% url 'cancel_booking' 'hotel' booking.id %}" class="btn btn-danger btn-sm">Отменить</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-muted">Вы ещё не бронировали отели.</p>
-            {% endif %}
-
-            <!-- Консультации с врачами -->
-            <h5 class="mt-3">Консультации</h5>
-            {% if consultation_bookings %}
-                <div class="list-group">
-                    {% for booking in consultation_bookings %}
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Доктор {{ booking.doctor.name }}</strong> <br>
-                                <small>Дата: {{ booking.date|date:"F d, Y" }} в {{ booking.time|time:"h:i A" }}</small> <br>
-                                <small>Статус: <span class="badge bg-info">{{ booking.status }}</span></small>
-                            </div>
-                            <a href="{% url 'cancel_booking' 'consultation' booking.id %}" class="btn btn-danger btn-sm">Отменить</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-muted">Вы ещё не записались на консультации.</p>
-            {% endif %}
+                <!-- Quick Stats -->
+<div class="modern-card p-4">
+    <h5 class="fw-bold mb-2">Статистика</h5>
+    <div class="row g-3">
+        <div class="col-6">
+            <div class="text-center p-3 bg-primary bg-opacity-10 rounded-3">
+                <h4 class="fw-bold text-primary mb-1">
+                    {{ clinic_bookings|length }}
+                </h4>
+                <small class="text-muted">Записи в клиники</small>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center p-3 bg-success bg-opacity-10 rounded-3">
+                <h4 class="fw-bold text-success mb-1">
+                    {{ hotel_bookings|length }}
+                </h4>
+                <small class="text-muted">Бронь отелей</small>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center p-3 bg-info bg-opacity-10 rounded-3">
+                <h4 class="fw-bold text-info mb-1">
+                    {{ consultation_bookings|length }}
+                </h4>
+                <small class="text-muted">Консультации</small>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Кнопки для бронирования -->
-    <div class="mt-4 text-center">
-        <a href="{% url 'clinic_booking' %}" class="btn btn-success">Забронировать клинику</a>
-        <a href="{% url 'hotel_booking' %}" class="btn btn-success">Забронировать отель</a>
-        <a href="{% url 'consultation_booking' %}" class="btn btn-success">Записаться к врачу</a>
+            </div>
+
+<!-- Clinic Bookings -->
+{% if clinic_bookings %}
+<div class="modern-card p-4 mb-5">
+    <h4 class="fw-bold mb-4">
+        <i class="fas fa-hospital text-primary me-3"></i>Записи в клиники
+    </h4>
+    <div class="row g-4">
+        {% for booking in clinic_bookings %}
+        <div class="col-md-6">
+            <div class="border rounded-3 p-4 h-100">
+
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="fw-bold mb-0">{{ booking.clinic.name }}</h6>
+                    <span class="badge
+                        {% if booking.status == 'pending' %} bg-warning text-dark
+                        {% elif booking.status == 'confirmed' %} bg-success
+                        {% elif booking.status == 'canceled' %} bg-danger
+                        {% else %} bg-secondary
+                        {% endif %}">
+                        {{ booking.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-user-md me-2"></i>Врач: {{ booking.doctor.name }}
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-building me-2"></i>Отделение: {{ booking.department }}
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    С {{ booking.start_date|date:"d.m.Y" }} по {{ booking.end_date|date:"d.m.Y" }}
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    {{ booking.clinic.city|default:"Бишкек" }}, {{ booking.clinic.country|default:"Кыргызстан" }}
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye me-2"></i>Подробнее
+                    </a>
+
+                    {% if booking.status == 'pending' and booking.start_date > today_plus_1_day %}
+                    <form method="post" action="{% url 'cancel_booking' 'clinic' booking.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Вы уверены, что хотите отменить запись?');">
+                            <i class="fas fa-times me-2"></i>Отменить запись
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
+{% endif %}
+
+          {% if consultation_bookings %}
+<div class="modern-card p-4 mb-5">
+    <h4 class="fw-bold mb-4">
+        <i class="fas fa-user-md text-info me-3"></i>Назначенные консультации
+    </h4>
+    <div class="row g-4">
+        {% for booking in consultation_bookings %}
+        <div class="col-md-6">
+            <div class="border rounded-3 p-4 h-100">
+
+                <!-- Верхняя часть -->
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="fw-bold mb-0">{{ booking.doctor.name }}</h6>
+                    <span class="badge bg-info">
+                        {{ booking.date|date:"d.m.Y" }} в {{ booking.time|time:"H:i" }}
+                    </span>
+                </div>
+
+
+
+                <!-- Информация -->
+                <div class="text-muted mb-2">
+                    <i class="fas fa-clinic-medical me-2"></i>{{ booking.doctor.clinic.name }}
+                </div>
+
+                <div class="text-muted mb-2">
+                    <i class="fas fa-building me-2"></i>{{ booking.doctor.specialty }}
+                </div>
+
+                <!-- Кнопка отмены -->
+                {% with booking_datetime=booking.date|stringformat:"Y-m-d"|add:" "|add:booking.time|stringformat:"H:i" %}
+                    {% with booking_timestamp=booking_datetime|date:"U" %}
+                        {% with now_timestamp=now|date:"U" %}
+                            {% if booking.status == 'pending' and booking_timestamp|add:"-18000" > now_timestamp %}
+                                <form method="post" action="{% url 'cancel_booking' 'consultation' booking.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-3"
+                                            onclick="return confirm('Вы уверены, что хотите отменить консультацию?');">
+                                        <i class="fas fa-times me-2"></i>Отменить запись
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+                {% endwith %}
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if hotel_bookings %}
+<div class="modern-card p-4 mb-5">
+    <h4 class="fw-bold mb-4">
+        <i class="fas fa-bed text-secondary me-3"></i>Бронирование отелей
+    </h4>
+    <div class="row g-4">
+        {% for booking in hotel_bookings %}
+        <div class="col-md-6">
+            <div class="border rounded-3 p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="fw-bold mb-0">{{ booking.hotel.name }}</h6>
+                    <span class="badge
+                        {% if booking.status == 'pending' %} bg-warning text-dark
+                        {% elif booking.status == 'confirmed' %} bg-success
+                        {% elif booking.status == 'canceled' %} bg-danger
+                        {% else %} bg-secondary
+                        {% endif %}">
+                        {{ booking.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    С {{ booking.check_in_date|date:"d.m.Y" }} по {{ booking.check_out_date|date:"d.m.Y" }}
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-users me-2"></i>Гостей: {{ booking.guests }}
+                </div>
+
+                <div class="mb-2 text-muted">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    {{ booking.hotel.city|default:"Бишкек" }}, {{ booking.hotel.country|default:"Кыргызстан" }}
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                    {% if booking.status == 'pending' and booking.check_in_date > today_plus_1_day %}
+                    <form method="post" action="{% url 'cancel_booking' 'hotel' booking.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Вы уверены, что хотите отменить бронирование?');">
+                            <i class="fas fa-times me-2"></i>Отменить бронирование
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+
+                <!-- No Bookings Message -->
+                {% if not clinic_bookings and not hotel_bookings %}
+                <div class="modern-card p-5 text-center">
+                    <i class="fas fa-calendar-times text-muted mb-4" style="font-size: 4rem;"></i>
+                    <h4 class="fw-bold mb-3">У вас пока нет записей</h4>
+                    <p class="text-muted mb-4">
+                        Начните свое медицинское путешествие, забронировав консультацию в одной из наших клиник.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="{% url 'clinic_list' %}" class="btn btn-primary-modern">
+                            <i class="fas fa-hospital me-2"></i>Найти клинику
+                        </a>
+                        <a href="{% url 'hotel_list' %}" class="btn btn-success-modern">
+                            <i class="fas fa-bed me-2"></i>Забронировать отель
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Recent Activity -->
+                <div class="modern-card p-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-history text-info me-3"></i>Последняя активность
+                    </h4>
+                    <div class="timeline">
+                        <div class="d-flex mb-4">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user-plus text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fw-bold mb-1">Регистрация аккаунта</h6>
+                                <p class="text-muted small mb-0">{{ user.date_joined|date:"d.m.Y" }}</p>
+                            </div>
+                        </div>
+
+                        {% if clinic_bookings %}
+                        <div class="d-flex mb-4">
+                            <div class="flex-shrink-0">
+                                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-calendar-check text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fw-bold mb-1">Последняя запись в клинику</h6>
+                                <p class="text-muted small mb-0">{{ clinic_bookings.0.created_at|date:"d.m.Y" }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-sign-in-alt text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fw-bold mb-1">Последний вход</h6>
+                                <p class="text-muted small mb-0">{{ user.last_login|date:"d.m.Y H:i" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 

@@ -1,58 +1,330 @@
 {% extends "base.html" %}
 
-{% block title %}{{ clinic.name }}{% endblock %}
+{% block title %}{{ clinic.name }} | MedTour{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="card shadow-lg p-4 mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="{{ clinic.photo.url }}" class="img-fluid rounded" alt="{{ clinic.name }}">
-            </div>
-            <div class="col-md-6">
-                <h2>{{ clinic.name }}</h2>
-                <p><strong>Адрес:</strong> {{ clinic.address }}</p>
-                <p><strong>Описание:</strong> {{ clinic.description }}</p>
-                <p><strong>Специализации:</strong> {{ clinic.specializations }}</p>
+<!-- Clinic Hero Section -->
+<section class="clinic-hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: -80px; padding-top: 120px; padding-bottom: 80px;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home' %}" class="text-white-50 text-decoration-none">
+                                <i class="fas fa-home me-1"></i>Главная
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'clinic_list' %}" class="text-white-50 text-decoration-none">Клиники</a>
+                        </li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">{{ clinic.name }}</li>
+                    </ol>
+                </nav>
 
-                {% if user.is_authenticated %}
-                    <a href="{% url 'clinic_booking' %}" class="btn btn-success mt-3">Забронировать</a>
-                {% else %}
-                    <p class="text-muted mt-3">Чтобы забронировать приём, <a href="{% url 'login' %}">войдите</a> в аккаунт.</p>
-                {% endif %}
+                <h1 class="display-4 fw-bold text-white mb-3">{{ clinic.name }}</h1>
+
+                <div class="d-flex align-items-center text-white mb-3">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <span class="fs-5">{{ clinic.city }}, {{ clinic.country }}</span>
+                </div>
+
+                <p class="lead text-white">{{ clinic.description|truncatewords:20 }}</p>
+
+                <!-- Quick Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <span class="text-black fw-semibold">4.8</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
+                            <i class="fas fa-user-md text-success me-2"></i>
+                            <span class="text-black fw-semibold">{{ clinic.doctor_set.count }} врачей</span>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
+                            <i class="fas fa-certificate text-info me-2"></i>
+                            <span class="text-black fw-semibold">Сертифицирована</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'book_clinic' clinic.id %}" class="btn btn-light btn-lg px-4">
+                            <i class="fas fa-calendar-plus me-2"></i>Записаться
+                         </a>
+                        <button class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-heart me-2"></i>В избранное
+                        </button>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4">
+                            <i class="fas fa-sign-in-alt me-2"></i>Войти для записи
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="clinic-image-container">
+                    {% if clinic.photo %}
+                        <img src="{{ clinic.photo.url }}"
+                             class="img-fluid rounded-4 shadow-lg clinic-main-image"
+                             alt="{{ clinic.name }}">
+                    {% else %}
+                        <div class="clinic-placeholder bg-white bg-opacity-20 rounded-4 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-hospital text-white" style="font-size: 5rem;"></i>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Отзывы -->
-    <h3 class="mt-5">Отзывы пациентов</h3>
-    {% if clinic.reviews.all %}
-        <div class="list-group mt-3">
-            {% for review in clinic.reviews.all %}
-                <div class="list-group-item">
-                    <strong>{{ review.user.username }}</strong>
-                    <span class="badge bg-warning text-dark">{{ review.rating }} ★</span>
-                    <p>{{ review.comment }}</p>
-                    <small class="text-muted">{{ review.created_at|date:"d.m.Y H:i" }}</small>
+<!-- Main Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- About Section -->
+                <div class="content-card mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle text-primary me-3"></i>О клинике
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted lh-lg">{{ clinic.description }}</p>
+
+                        <div class="row g-4 mt-4">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-building text-primary"></i>
+                                    <div>
+                                        <strong>Тип учреждения:</strong>
+                                        <span class="text-muted">Частная клиника</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar text-success"></i>
+                                    <div>
+                                        <strong>Год основания:</strong>
+                                        <span class="text-muted">2010</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-bed text-info"></i>
+                                    <div>
+                                        <strong>Количество коек:</strong>
+                                        <span class="text-muted">150</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-clock text-warning"></i>
+                                    <div>
+                                        <strong>Режим работы:</strong>
+                                        <span class="text-muted">24/7</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="text-muted">Отзывов пока нет.</p>
-    {% endif %}
 
-    <!-- Добавление отзыва -->
-    {% if user.is_authenticated %}
-        <h4 class="mt-4">Оставьте отзыв</h4>
-        <form method="post">
-            {% csrf_token %}
-            {{ review_form.as_p }}
-            <button type="submit" class="btn btn-primary">Отправить</button>
-        </form>
-    {% else %}
-        <p class="mt-3">Чтобы оставить отзыв, <a href="{% url 'login' %}">войдите</a> в аккаунт.</p>
-    {% endif %}
-</div>
+                <!-- Services Section -->
+                <div class="content-card mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-stethoscope text-success me-3"></i>Медицинские услуги
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            {% for service in services %}
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span>{{ service }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctors Section -->
+                {% if clinic.doctor_set.all %}
+                <div class="content-card mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-md text-info me-3"></i>Врачи клиники
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            {% for doctor in clinic.doctor_set.all %}
+                            <div class="col-md-6">
+                                <div class="doctor-card">
+                                    <div class="doctor-avatar">
+                                        {% if doctor.photo %}
+                                            <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}">
+                                        {% else %}
+                                            <div class="avatar-placeholder">
+                                                <i class="fas fa-user-md"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="doctor-info">
+                                        <h5 class="doctor-name">{{ doctor.name }}</h5>
+                                        <p class="doctor-specialty">{{ doctor.specialty }}</p>
+                                        <div class="doctor-meta">
+                                            <span class="experience">
+                                                <i class="fas fa-graduation-cap me-1"></i>
+                                                {{ doctor.experience }} лет опыта
+                                            </span>
+                                        </div>
+                                        <button class="btn btn-outline-primary btn-sm mt-2">
+                                            <i class="fas fa-calendar-plus me-1"></i>Записаться
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Reviews Section -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-comments text-warning me-3"></i>Отзывы пациентов
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Sample Reviews -->
+                        <div class="reviews-container">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="reviewer-name">Анна К.</h6>
+                                            <div class="review-rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="review-date">15.12.2023</span>
+                                </div>
+                                <p class="review-text">Отличная клиника! Профессиональные врачи, современное оборудование. Очень довольна качеством обслуживания.</p>
+                            </div>
+
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="reviewer-name">Михаил С.</h6>
+                                            <div class="review-rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="review-date">10.12.2023</span>
+                                </div>
+                                <p class="review-text">Хорошая клиника, но долго ждал приема. В остальном все на высоком уровне.</p>
+                            </div>
+                        </div>
+
+                        <!-- Add Review Form -->
+                        {% if user.is_authenticated %}
+                        <div class="add-review-section">
+                            <h5 class="mb-3">Оставить отзыв</h5>
+                            <form class="review-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Ваша оценка:</label>
+                                    <div class="rating-input">
+                                        {% for i in "12345" %}
+                                        <input type="radio" name="rating" value="{{ forloop.counter }}" id="star{{ forloop.counter }}">
+                                        <label for="star{{ forloop.counter }}" class="star-label">
+                                            <i class="far fa-star"></i>
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" rows="4" placeholder="Поделитесь своим опытом..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane me-2"></i>Отправить отзыв
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="col-lg-4">
+                <!-- Booking Card -->
+                <div class="booking-card sticky-top">
+                    <div class="booking-header">
+                        <h4><i class="fas fa-calendar-check me-2"></i>Записаться на прием</h4>
+                    </div>
+                    <div class="booking-body">
+                        {% if user.is_authenticated %}
+                            <div class="d-grid gap-3">
+                                <button class="btn btn-primary btn-lg">
+                                    <i class="fas fa-hospital me-2"></i>Записаться в клинику
+                                </button>
+                                <button class="btn btn-success">
+                                    <i class="fas fa-user-md me-2"></i>Консультация врача
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <p class="text-muted mb-3">Войдите для записи на прием</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
+                                    <a href="{% url 'register' %}" class="btn btn-outline-secondary">Зарегистрироваться</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
+
 
 

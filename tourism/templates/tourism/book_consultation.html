@@ -1,43 +1,76 @@
 {% extends "base.html" %}
 
-{% block title %}Запись к Врачу{% endblock %}
+{% block title %}Запись к Врачу | MedTour{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mt-4 mb-3 text-center">Запись на Консультацию</h2>
-
-    {% if messages %}
-        <div class="alert alert-info">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <div class="card shadow-lg p-4">
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label">Выберите врача:</label>
-                {{ form.doctor }}
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Дата:</label>
-                    {{ form.date }}
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Время:</label>
-                    {{ form.time }}
-                </div>
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Записаться</button>
-                <a href="{% url 'user_profile' %}" class="btn btn-secondary">Назад</a>
-            </div>
-        </form>
+<section class="py-5" style="background: var(--primary-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container text-center text-white">
+        <h1 class="display-5 fw-bold mb-3">Запись к врачу</h1>
+        <p class="lead">Вы записываетесь к доктору {{ doctor.name }}</p>
     </div>
-</div>
+</section>
+
+<section class="section-modern">
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="modern-card p-4">
+            <form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+
+    <!-- Врач (только отображение) -->
+    <div class="mb-4">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-user-md text-primary me-2"></i>Врач:
+        </label>
+        <input type="text" class="form-control bg-light" value="{{ doctor.name }}" disabled>
+    </div>
+
+    <!-- Дата -->
+    <div class="mb-4">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-calendar-alt text-primary me-2"></i>Дата консультации:
+        </label>
+        {{ form.date }}
+        {% if form.date.errors %}
+            <div class="invalid-feedback d-block">{{ form.date.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Время -->
+    <div class="mb-4">
+        <label class="form-label fw-semibold">
+            <i class="fas fa-clock text-primary me-2"></i>Доступное время:
+        </label>
+        {{ form.time }}
+        {% if form.time.errors %}
+            <div class="invalid-feedback d-block">{{ form.time.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Кнопки -->
+    <div class="d-grid gap-2 mt-4">
+        {% if form.fields.time.choices|length > 1 %}
+            <button type="submit" class="btn btn-primary-modern">
+                <i class="fas fa-calendar-check me-2"></i>Записаться
+            </button>
+        {% else %}
+            <button type="submit" name="show_times" class="btn btn-outline-primary">
+                <i class="fas fa-clock me-2"></i>Показать доступное время
+            </button>
+        {% endif %}
+
+        <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Назад к врачу
+        </a>
+    </div>
+</form>
+
+        </div>
+    </div>
+</section>
 {% endblock %}

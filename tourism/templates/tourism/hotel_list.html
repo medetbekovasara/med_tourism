@@ -1,27 +1,125 @@
 {% extends "base.html" %}
-{% block title %}Список Отелей{% endblock %}
+
+{% block title %}Hotels | MedTour{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-  <h2 class="text-center mb-4">Список Отелей</h2>
-  <div class="row">
-    {% for hotel in hotels %}
-    <div class="col-md-4 mb-4">
-      <div class="card shadow border-0 h-100">
-        {% if hotel.photo %}
-        <img src="{{ hotel.photo.url }}" class="card-img-top" alt="{{ hotel.name }}">
-        {% else %}
-        <img src="https://via.placeholder.com/400x250?text=Нет+фото" class="card-img-top" alt="Нет фото">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">{{ hotel.name }}</h5>
-          <p class="text-muted">{{ hotel.city }}, {{ hotel.country }}</p>
-          <p class="card-text">{{ hotel.address }}</p>
-          <a href="{% url 'hotel_detail' hotel.id %}" class="btn btn-outline-primary">Подробнее</a>
+<!-- Page Header -->
+<section class="py-5" style="background: var(--success-gradient); margin-top: -80px; padding-top: 150px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold text-white mb-3">Luxury Hotels</h1>
+                <p class="lead text-white mb-0">Comfortable recovery in premium accommodations</p>
+            </div>
         </div>
-      </div>
     </div>
-    {% endfor %}
-  </div>
-</div>
+</section>
+
+<!-- Hotels Grid -->
+<section class="section-modern">
+    <div class="container">
+        <div class="row g-4">
+            {% for hotel in hotels %}
+            <div class="col-lg-6">
+                <div class="modern-card overflow-hidden h-100">
+                    <div class="row g-0">
+                        <div class="col-md-5">
+                            <!-- Hotel Photo -->
+                            {% if hotel.photo %}
+                                <img src="{{ hotel.photo.url }}" class="img-fluid h-100 w-100"
+                                     alt="{{ hotel.name }}" style="object-fit: cover; min-height: 250px;">
+                            {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center h-100" style="min-height: 250px;">
+                                    <i class="fas fa-bed text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body p-4 h-100 d-flex flex-column">
+                                <!-- Hotel Name and Rating -->
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h5 class="card-title fw-bold mb-2">{{ hotel.name }}</h5>
+                                        <div class="text-warning">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hotel Address -->
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ hotel.address }}
+                                    </p>
+
+                                    <!-- City and Country -->
+                                    <p class="text-muted mb-3">
+                                        <i class="fas fa-globe me-2 text-success"></i>{{ hotel.city }}, {{ hotel.country }}
+                                    </p>
+                                </div>
+
+                                <!-- Hotel Description -->
+                                <p class="card-text text-muted mb-4 flex-grow-1">{{ hotel.description|truncatewords:25 }}</p>
+
+                                <!-- Amenities -->
+                                <div class="amenities mb-4">
+                                    <div class="row g-2 text-center">
+                                        <div class="col-3">
+                                            <i class="fas fa-wifi text-primary mb-1 d-block"></i>
+                                            <small class="text-muted">WiFi</small>
+                                        </div>
+                                        <div class="col-3">
+                                            <i class="fas fa-swimming-pool text-primary mb-1 d-block"></i>
+                                            <small class="text-muted">Pool</small>
+                                        </div>
+                                        <div class="col-3">
+                                            <i class="fas fa-spa text-primary mb-1 d-block"></i>
+                                            <small class="text-muted">Spa</small>
+                                        </div>
+                                        <div class="col-3">
+                                            <i class="fas fa-car text-primary mb-1 d-block"></i>
+                                            <small class="text-muted">Parking</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'hotel_detail' hotel.id %}" class="btn btn-primary-modern">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </a>
+
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'book_hotel' hotel.id %}" class="btn btn-success-modern">
+                                        <i class="fas fa-calendar-check me-2"></i>Book Now
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+    Log in to book an appointment
+</a>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-bed text-muted mb-3" style="font-size: 4rem;"></i>
+                    <h3 class="text-muted">No hotels available</h3>
+                    <p class="text-muted">No hotels are available at the moment.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary-modern">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,120 +1,356 @@
+
+
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MedTour{% endblock %}</title>
+    <title>{% block title %}MedTour - Premium Medical Tourism{% endblock %}</title>
 
-    <!-- Bootstrap и шрифты -->
+    <!-- Modern CSS Framework -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --light-bg: #f8fafc;
+            --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --hover-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            --border-radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f9ff;
-            color: #333;
+            background: var(--light-bg);
+            line-height: 1.6;
+            color: #2d3748;
         }
 
-        .navbar {
-            background-color: #113865;
+        .navbar-modern {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .navbar .nav-link,
         .navbar-brand {
-            color: white !important;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(17, 56, 101, 0.6), rgba(17, 56, 101, 0.6)),
-                        url('https://s3.stroi-news.ru/img/interer-bolnitsi-oboi-26.jpg') center/cover no-repeat;
-            height: 80vh;
-        }
-
-        .hero-section h1 {
             font-weight: 700;
-            font-size: 3rem;
+            font-size: 1.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        footer {
-            background-color: #113865;
-            color: white;
-            padding: 20px 0;
+        .nav-link {
+            font-weight: 500;
+            color: #4a5568 !important;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background-color: #0069d9;
+        .nav-link:hover {
+            background: var(--primary-gradient);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
             border: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
+        .modern-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .modern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .btn-modern {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary-modern {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary-modern {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .btn-success-modern {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .hero-modern {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-modern {
+            padding: 100px 0;
         }
 
         .section-title {
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 1rem;
-            color: #113865;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: var(--dark-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-modern {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-control-modern {
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-control-modern:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .hero-modern {
+                min-height: 80vh;
+            }
         }
     </style>
-
-    {% block extra_css %}{% endblock %}
 </head>
-
 <body>
+    <!-- Modern Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-modern">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-heartbeat me-2"></i>MedTour
+            </a>
 
-<!-- Навигация -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'home' %}">MedTour</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">Почему Кыргызстан?</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'clinic_list' %}">Клиники</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'doctor_list' %}">Врачи</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'hotel_list' %}">Отели</a></li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">Профиль</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Выйти</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Войти</a></li>
-                {% endif %}
-            </ul>
+           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'clinic_list' %}"><i class="fas fa-hospital me-1"></i>Clinics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'doctor_list' %}"><i class="fas fa-user-md me-1"></i>Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'hotel_list' %}"><i class="fas fa-bed me-1"></i>Hotels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle me-1"></i>About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user_profile' %}"><i class="fas fa-user me-1"></i>Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-1" ></i>Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary-modern text-white px-4" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Контент -->
-<main>
-    {% block content %}{% endblock %}
-</main>
+    <!-- Main Content -->
+    <main style="margin-top: 80px;">
+        {% block content %}
+        {% endblock %}
+    </main>
 
-<!-- Футер -->
-<footer class="text-center mt-5">
+   <!-- Modern Footer -->
+<footer class="bg-dark text-white py-5 mt-5">
     <div class="container">
-        <p class="mb-0">© 2025 MedTour. Все права защищены.</p>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="fas fa-heartbeat me-2"></i>MedTour</h5>
+                <p class="text-white">Your trusted partner in medical tourism. Connecting you with world-class healthcare providers and comfortable accommodations.</p>
+            </div>
+            <div class="col-lg-2 mb-4">
+                <h6 class="fw-bold mb-3 text-white">Services</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white text-decoration-none">Clinics</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Doctors</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Hotels</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 mb-4">
+                <h6 class="fw-bold mb-3 text-white">Support</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white text-decoration-none">Help Center</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">Contact Us</a></li>
+                    <li><a href="#" class="text-white text-decoration-none">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <h6 class="fw-bold mb-3 text-white">Contact Info</h6>
+                <p class="text-white mb-2"><i class="fas fa-envelope me-2"></i>info@medtour.com</p>
+                <p class="text-white mb-2"><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+                <div class="mt-3">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4 text-white">
+        <div class="text-center">
+            <p class="text-white mb-0">&copy; 2024 MedTour. All rights reserved.</p>
+        </div>
     </div>
 </footer>
 
-<!-- Google Translate Плашка -->
-<div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: white; border-radius: 8px; padding: 6px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; font-size: 14px;"></div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-modern');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
 
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'ru',
-      includedLanguages: 'ru,en,zh-CN',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-  }
-</script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                }
+            });
+        }, observerOptions);
 
+        document.querySelectorAll('.modern-card, .section-title').forEach(el => {
+            observer.observe(el);
+        });
+
+
+    </script>
 </body>
 </html>
-
 
