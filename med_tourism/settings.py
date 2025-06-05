@@ -12,10 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 
 import os
-import dj_database_url
 from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
 
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://web-production-57f4.up.railway.app').split(',')
@@ -48,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'account',
     'tourism',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +125,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#         'level': 'INFO',
+#     },
+# }
+
+
+# Для отладки
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -135,9 +150,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
+    'loggers': {
+        'chatbot': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
     },
 }
 # Internationalization
@@ -203,3 +220,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 from dotenv import load_dotenv
 load_dotenv()
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+print(f"OpenAI API Key loaded: {'Yes' if OPENAI_API_KEY else 'No'}")

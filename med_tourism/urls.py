@@ -26,5 +26,6 @@ urlpatterns = [
     path('', include('tourism.urls')),  # Страницы клиник
     path('accounts/', include('django.contrib.auth.urls')),  # Авторизация
     path('account/', include('account.urls')),  # Профиль пользователя
+    path('chatbot/', include('chatbot.urls')),
 ]
 
