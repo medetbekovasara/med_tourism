@@ -2,273 +2,9 @@
 
 {% block title %}{{ clinic.name }} | MedTour{% endblock %}
 
-{% block extra_css %}
-<style>
-/* Clinic Detail Styles */
-.clinic-hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    margin-top: -80px;
-    padding-top: 120px;
-    padding-bottom: 80px;
-}
-
-.clinic-main-image {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.clinic-placeholder {
-    width: 100%;
-    height: 300px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.content-card {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border: none;
-    overflow: hidden;
-}
-
-.content-card .card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    padding: 1.5rem;
-}
-
-.content-card .card-body {
-    padding: 1.5rem;
-}
-
-.card-title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-}
-
-.info-item i {
-    font-size: 1.2rem;
-    width: 20px;
-    text-align: center;
-}
-
-.service-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Doctor Cards */
-.doctor-card {
-    background: white;
-    border: 1px solid #e9ecef;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.doctor-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.doctor-avatar {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #e9ecef;
-}
-
-.doctor-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6c757d;
-    font-size: 1.5rem;
-}
-
-.doctor-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.doctor-specialty {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
-}
-
-.doctor-meta {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
-}
-
-/* Reviews */
-.review-item {
-    border-bottom: 1px solid #e9ecef;
-    padding: 1.5rem 0;
-}
-
-.review-item:last-child {
-    border-bottom: none;
-}
-
-.review-header {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.reviewer-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.reviewer-avatar {
-    width: 40px;
-    height: 40px;
-    background: #f8f9fa;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6c757d;
-}
-
-.reviewer-name {
-    margin: 0;
-    font-weight: 600;
-}
-
-.review-rating {
-    color: #ffc107;
-}
-
-.review-date {
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-
-.review-text {
-    color: #495057;
-    line-height: 1.6;
-    margin: 0;
-}
-
-/* Booking Card */
-.booking-card {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    overflow: hidden;
-    top: 2rem;
-}
-
-.booking-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1.5rem;
-}
-
-.booking-header h4 {
-    margin: 0;
-    font-size: 1.1rem;
-}
-
-.booking-body {
-    padding: 1.5rem;
-}
-
-/* Rating Input */
-.rating-input {
-    display: flex;
-    gap: 0.25rem;
-}
-
-.rating-input input[type="radio"] {
-    display: none;
-}
-
-.star-label {
-    cursor: pointer;
-    color: #ddd;
-    font-size: 1.2rem;
-    transition: color 0.2s;
-}
-
-.rating-input input[type="radio"]:checked ~ .star-label,
-.star-label:hover {
-    color: #ffc107;
-}
-
-.add-review-section {
-    border-top: 1px solid #e9ecef;
-    padding-top: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .clinic-hero {
-        padding-top: 100px;
-        padding-bottom: 60px;
-    }
-
-    .doctor-card {
-        margin-bottom: 1rem;
-    }
-
-    .booking-card {
-        position: static !important;
-        margin-top: 2rem;
-    }
-}
-</style>
-{% endblock %}
-
 {% block content %}
 <!-- Clinic Hero Section -->
-<section class="clinic-hero">
+<section class="clinic-hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: -80px; padding-top: 120px; padding-bottom: 80px;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-7">
@@ -299,18 +35,22 @@
                 <div class="row g-3 mb-4">
                     <div class="col-auto">
                         <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
-                            <i class="fas fa-user-md text-success me-2"></i>
-                            <span class="text-white fw-semibold">{{ clinic.doctor_set.count }} врач{{ clinic.doctor_set.count|pluralize:"ей,а,ей" }}</span>
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <span class="text-black fw-semibold">4.8</span>
                         </div>
                     </div>
-                    {% if clinic.specializations %}
                     <div class="col-auto">
                         <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
-                            <i class="fas fa-stethoscope text-info me-2"></i>
-                            <span class="text-white fw-semibold">{{ clinic.specializations|truncatewords:2 }}</span>
+                            <i class="fas fa-user-md text-success me-2"></i>
+                            <span class="text-black fw-semibold">{{ clinic.doctor_set.count }} врачей</span>
                         </div>
                     </div>
-                    {% endif %}
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center bg-white bg-opacity-20 rounded-pill px-3 py-2">
+                            <i class="fas fa-certificate text-info me-2"></i>
+                            <span class="text-black fw-semibold">Сертифицирована</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -334,10 +74,10 @@
                 <div class="clinic-image-container">
                     {% if clinic.photo %}
                         <img src="{{ clinic.photo.url }}"
-                             class="clinic-main-image"
+                             class="img-fluid rounded-4 shadow-lg clinic-main-image"
                              alt="{{ clinic.name }}">
                     {% else %}
-                        <div class="clinic-placeholder">
+                        <div class="clinic-placeholder bg-white bg-opacity-20 rounded-4 d-flex align-items-center justify-content-center">
                             <i class="fas fa-hospital text-white" style="font-size: 5rem;"></i>
                         </div>
                     {% endif %}
@@ -363,33 +103,31 @@
                     <div class="card-body">
                         <p class="text-muted lh-lg">{{ clinic.description }}</p>
 
-                        <div class="row g-3 mt-4">
+                        <div class="row g-4 mt-4">
                             <div class="col-md-6">
                                 <div class="info-item">
-                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                    <i class="fas fa-building text-primary"></i>
                                     <div>
-                                        <strong>Адрес:</strong>
-                                        <span class="text-muted">{{ clinic.address }}</span>
+                                        <strong>Тип учреждения:</strong>
+                                        <span class="text-muted">Частная клиника</span>
                                     </div>
                                 </div>
                             </div>
-                            {% if clinic.specializations %}
                             <div class="col-md-6">
                                 <div class="info-item">
-                                    <i class="fas fa-stethoscope text-success"></i>
+                                    <i class="fas fa-calendar text-success"></i>
                                     <div>
-                                        <strong>Специализации:</strong>
-                                        <span class="text-muted">{{ clinic.specializations }}</span>
+                                        <strong>Год основания:</strong>
+                                        <span class="text-muted">2010</span>
                                     </div>
                                 </div>
                             </div>
-                            {% endif %}
                             <div class="col-md-6">
                                 <div class="info-item">
-                                    <i class="fas fa-user-md text-info"></i>
+                                    <i class="fas fa-bed text-info"></i>
                                     <div>
-                                        <strong>Количество врачей:</strong>
-                                        <span class="text-muted">{{ clinic.doctor_set.count }}</span>
+                                        <strong>Количество коек:</strong>
+                                        <span class="text-muted">150</span>
                                     </div>
                                 </div>
                             </div>
@@ -397,11 +135,32 @@
                                 <div class="info-item">
                                     <i class="fas fa-clock text-warning"></i>
                                     <div>
-                                        <strong>Статус:</strong>
-                                        <span class="text-muted">Принимает пациентов</span>
+                                        <strong>Режим работы:</strong>
+                                        <span class="text-muted">24/7</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Section -->
+                <div class="content-card mb-5">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-stethoscope text-success me-3"></i>Медицинские услуги
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            {% for service in services %}
+                        <div class="col-md-6">
+                            <div class="service-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span>{{ service }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -417,7 +176,7 @@
                     <div class="card-body">
                         <div class="row g-4">
                             {% for doctor in clinic.doctor_set.all %}
-                            <div class="col-md-6 col-lg-4">
+                            <div class="col-md-6">
                                 <div class="doctor-card">
                                     <div class="doctor-avatar">
                                         {% if doctor.photo %}
@@ -431,41 +190,16 @@
                                     <div class="doctor-info">
                                         <h5 class="doctor-name">{{ doctor.name }}</h5>
                                         <p class="doctor-specialty">{{ doctor.specialty }}</p>
-                                        {% if doctor.experience %}
                                         <div class="doctor-meta">
                                             <span class="experience">
                                                 <i class="fas fa-graduation-cap me-1"></i>
                                                 {{ doctor.experience }} лет опыта
                                             </span>
                                         </div>
-                                        {% endif %}
-                                        <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-outline-primary btn-sm mt-2">
-                                            <i class="fas fa-eye me-1"></i>Подробнее
-                                        </a>
+                                        <button class="btn btn-outline-primary btn-sm mt-2">
+                                            <i class="fas fa-calendar-plus me-1"></i>Записаться
+                                        </button>
                                     </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Services Section (если есть) -->
-                {% if clinic.services.all %}
-                <div class="content-card mb-5">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-stethoscope text-success me-3"></i>Медицинские услуги
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            {% for service in clinic.services.all %}
-                            <div class="col-md-6">
-                                <div class="service-item">
-                                    <i class="fas fa-check-circle text-success"></i>
-                                    <span>{{ service.name }}</span>
                                 </div>
                             </div>
                             {% endfor %}
@@ -482,55 +216,63 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <!-- Если есть отзывы в базе данных -->
-                        {% if clinic.reviews.all %}
-                            <div class="reviews-container">
-                                {% for review in clinic.reviews.all %}
-                                <div class="review-item">
-                                    <div class="review-header">
-                                        <div class="reviewer-info">
-                                            <div class="reviewer-avatar">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                            <div>
-                                                <h6 class="reviewer-name">{{ review.user.first_name|default:"Пациент" }}</h6>
-                                                <div class="review-rating">
-                                                    {% for i in "12345" %}
-                                                        {% if forloop.counter <= review.rating %}
-                                                            <i class="fas fa-star"></i>
-                                                        {% else %}
-                                                            <i class="far fa-star"></i>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
+                        <!-- Sample Reviews -->
+                        <div class="reviews-container">
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="reviewer-name">Анна К.</h6>
+                                            <div class="review-rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
                                             </div>
                                         </div>
-                                        <span class="review-date">{{ review.created_at|date:"d.m.Y" }}</span>
                                     </div>
-                                    <p class="review-text">{{ review.comment }}</p>
+                                    <span class="review-date">15.12.2023</span>
                                 </div>
-                                {% endfor %}
+                                <p class="review-text">Отличная клиника! Профессиональные врачи, современное оборудование. Очень довольна качеством обслуживания.</p>
                             </div>
-                        {% else %}
-                            <!-- Заглушка если нет отзывов -->
-                            <div class="text-center py-4">
-                                <i class="fas fa-comments text-muted" style="font-size: 3rem;"></i>
-                                <h5 class="mt-3 text-muted">Пока нет отзывов</h5>
-                                <p class="text-muted">Станьте первым, кто оставит отзыв об этой клинике!</p>
+
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="reviewer-name">Михаил С.</h6>
+                                            <div class="review-rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="review-date">10.12.2023</span>
+                                </div>
+                                <p class="review-text">Хорошая клиника, но долго ждал приема. В остальном все на высоком уровне.</p>
                             </div>
-                        {% endif %}
+                        </div>
 
                         <!-- Add Review Form -->
                         {% if user.is_authenticated %}
                         <div class="add-review-section">
                             <h5 class="mb-3">Оставить отзыв</h5>
-                            <form class="review-form" method="post" action="{% url 'add_review' clinic.id %}">
-                                {% csrf_token %}
+                            <form class="review-form">
                                 <div class="mb-3">
                                     <label class="form-label">Ваша оценка:</label>
                                     <div class="rating-input">
                                         {% for i in "12345" %}
-                                        <input type="radio" name="rating" value="{{ forloop.counter }}" id="star{{ forloop.counter }}" required>
+                                        <input type="radio" name="rating" value="{{ forloop.counter }}" id="star{{ forloop.counter }}">
                                         <label for="star{{ forloop.counter }}" class="star-label">
                                             <i class="far fa-star"></i>
                                         </label>
@@ -538,19 +280,12 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <textarea name="comment" class="form-control" rows="4" placeholder="Поделитесь своим опытом..." required></textarea>
+                                    <textarea class="form-control" rows="4" placeholder="Поделитесь своим опытом..."></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane me-2"></i>Отправить отзыв
                                 </button>
                             </form>
-                        </div>
-                        {% else %}
-                        <div class="add-review-section">
-                            <div class="text-center py-3">
-                                <p class="text-muted">Войдите, чтобы оставить отзыв</p>
-                                <a href="{% url 'login' %}" class="btn btn-outline-primary">Войти</a>
-                            </div>
                         </div>
                         {% endif %}
                     </div>
@@ -567,35 +302,12 @@
                     <div class="booking-body">
                         {% if user.is_authenticated %}
                             <div class="d-grid gap-3">
-                                <a href="{% url 'book_clinic' clinic.id %}" class="btn btn-primary btn-lg">
+                                <button class="btn btn-primary btn-lg">
                                     <i class="fas fa-hospital me-2"></i>Записаться в клинику
-                                </a>
-                                <button class="btn btn-success" onclick="openChatbot()">
-                                    <i class="fas fa-robot me-2"></i>Консультация с ботом
                                 </button>
-                            </div>
-
-                            <!-- Contact Info -->
-                            <div class="mt-4 pt-3 border-top">
-                                <h6 class="mb-3">Контактная информация</h6>
-                                <div class="contact-info">
-                                    <div class="contact-item mb-2">
-                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                        <small class="text-muted">{{ clinic.address }}</small>
-                                    </div>
-                                    {% if clinic.phone %}
-                                    <div class="contact-item mb-2">
-                                        <i class="fas fa-phone text-success me-2"></i>
-                                        <small class="text-muted">{{ clinic.phone }}</small>
-                                    </div>
-                                    {% endif %}
-                                    {% if clinic.email %}
-                                    <div class="contact-item mb-2">
-                                        <i class="fas fa-envelope text-info me-2"></i>
-                                        <small class="text-muted">{{ clinic.email }}</small>
-                                    </div>
-                                    {% endif %}
-                                </div>
+                                <button class="btn btn-success">
+                                    <i class="fas fa-user-md me-2"></i>Консультация врача
+                                </button>
                             </div>
                         {% else %}
                             <div class="text-center">
@@ -608,146 +320,12 @@
                         {% endif %}
                     </div>
                 </div>
-
-                <!-- Quick Stats Card -->
-                <div class="content-card mt-4">
-                    <div class="card-header">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-bar text-success me-2"></i>Статистика
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-number">{{ clinic.doctor_set.count }}</div>
-                                <div class="stat-label">Врач{{ clinic.doctor_set.count|pluralize:"ей,а,ей" }}</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number">{{ clinic.reviews.count|default:0 }}</div>
-                                <div class="stat-label">Отзыв{{ clinic.reviews.count|pluralize:"ов,а,ов" }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- Chatbot Integration -->
-<script>
-function openChatbot() {
-    // Открываем чат-бот в новом окне или модальном окне
-    window.open('{% url "chatbot:chatbot" %}', '_blank', 'width=400,height=600');
-}
-
-// Rating stars interaction
-document.addEventListener('DOMContentLoaded', function() {
-    const ratingInputs = document.querySelectorAll('.rating-input input[type="radio"]');
-    const starLabels = document.querySelectorAll('.star-label');
-
-    ratingInputs.forEach((input, index) => {
-        input.addEventListener('change', function() {
-            starLabels.forEach((label, labelIndex) => {
-                const star = label.querySelector('i');
-                if (labelIndex <= index) {
-                    star.className = 'fas fa-star';
-                } else {
-                    star.className = 'far fa-star';
-                }
-            });
-        });
-    });
-});
-</script>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-/* Дополнительные стили для статистики */
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.stat-item {
-    text-align: center;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-}
-
-.stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-top: 0.25rem;
-}
-
-.contact-item {
-    display: flex;
-    align-items: center;
-}
-
-/* Улучшенные стили для рейтинга */
-.rating-input {
-    display: flex;
-    gap: 0.25rem;
-    margin-bottom: 1rem;
-}
-
-.rating-input input[type="radio"] {
-    display: none;
-}
-
-.star-label {
-    cursor: pointer;
-    color: #ddd;
-    font-size: 1.2rem;
-    transition: color 0.2s;
-}
-
-.star-label:hover,
-.rating-input input[type="radio"]:checked ~ .star-label {
-    color: #ffc107;
-}
-
-/* Анимация для карточек врачей */
-.doctor-card {
-    transition: all 0.3s ease;
-}
-
-.doctor-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-/* Responsive улучшения */
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .doctor-card {
-        margin-bottom: 1rem;
-    }
-
-    .clinic-hero {
-        text-align: center;
-    }
-
-    .clinic-hero .col-lg-5 {
-        margin-top: 2rem;
-    }
-}
-</style>
-{% endblock %}
 
 
 
